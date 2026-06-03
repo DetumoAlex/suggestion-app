@@ -1,615 +1,926 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trolleys Utilities — Your Voice</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #0d0d0d;
-    --paper: #f5f0e8;
-    --accent: #e84a1a;
-    --muted: #8a8070;
-    --border: #d4cdc0;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trolleys Utilities — Your Voice</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+    :root {
+  --ink: #0d0d0d;
+  --paper: #f5f0e8;
+  --accent: #156819;
+  --muted: #8a8070;
+  --border: #ca0a0a;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-  }
+      body {
+        background: var(--accent);
+        color: var(--ink);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
-  }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.5;
+      }
 
-  .page { display: none; min-height: 100vh; position: relative; z-index: 1; }
-  .page.active { display: flex; flex-direction: column; }
+      .page {
+        display: none;
+        min-height: 100vh;
+        position: relative;
+        z-index: 1;
+      }
+      .page.active {
+        display: flex;
+        flex-direction: column;
+      }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-  @keyframes popIn {
-    from { transform: scale(0); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
-  }
+      @keyframes popIn {
+        from {
+          transform: scale(0);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
 
-  /* ── FORM PAGE ── */
-  .header-band {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 28px 32px 24px;
-    position: relative;
-    overflow: hidden;
-  }
+      /* ── FORM PAGE ── */
+      .header-band {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 28px 32px 24px;
+        position: relative;
+        display: flex;
+        overflow: hidden;
+      }
 
-  .header-band::after {
-    content: '';
-    position: absolute;
-    right: -30px; top: -30px;
-    width: 140px; height: 140px;
-    border-radius: 50%;
-    background: var(--accent);
-    opacity: 0.18;
-  }
+      .header-band::after {
+        content: "";
+        position: absolute;
+        right: -30px;
+        top: -30px;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: var(--accent);
+        opacity: 0.18;
+      }
 
-  .brand {
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-  }
+      .brand {
+        font-family: "Syne", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
 
-  .header-band h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(28px, 7vw, 40px);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.5px;
-  }
+      .display {
+        margin-left: 10rem;
+      }
 
-  .header-band h1 span { color: var(--accent); }
+      .header-band h1 {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(28px, 7vw, 40px);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.5px;
+      }
 
-  .header-subtitle {
-    margin-top: 10px;
-    font-size: 13px;
-    font-weight: 300;
-    color: #b0a898;
-    line-height: 1.5;
-  }
+      .header-band h1 span {
+        color: var(--accent);
+      }
 
-  .divider { width: 40px; height: 2px; background: var(--accent); margin: 4px 0 0; }
+      .header-subtitle {
+        margin-top: 10px;
+        font-size: 13px;
+        font-weight: 300;
+        color: #b0a898;
+        line-height: 1.5;
+      }
 
-  .form-body {
-    padding: 32px 28px 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    flex: 1;
-  }
+      .divider {
+        width: 40px;
+        height: 2px;
+        background: var(--accent);
+        margin: 4px 0 0;
+      }
 
-  .field-group { display: flex; flex-direction: column; gap: 8px; }
+      .form-body {
+        padding: 32px 28px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        flex: 1;
+      }
 
-  label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-  input, textarea, select {
-    background: white;
-    border: 1.5px solid var(--border);
-    border-radius: 6px;
-    padding: 14px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-    -webkit-appearance: none;
-  }
+      label {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
 
-  input:focus, textarea:focus, select:focus {
-    border-color: var(--ink);
-    box-shadow: 0 0 0 3px rgba(13,13,13,0.08);
-  }
+      input,
+      textarea,
+      select {
+        background: white;
+        border: 1.5px solid var(--border);
+        border-radius: 6px;
+        padding: 14px 16px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        color: var(--ink);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        width: 100%;
+        color: black;
+        -webkit-appearance: none;
+      }
 
-  textarea { resize: none; min-height: 130px; line-height: 1.6; }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 3px rgba(13, 13, 13, 0.08);
+        color:rgb(12, 11, 11);
+      }
 
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230d0d0d' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    padding-right: 40px;
-    cursor: pointer;
-  }
+      textarea {
+        resize: none;
+        min-height: 130px;
+        line-height: 1.6;
+      }
 
-  .char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: -4px; }
-  .char-count.warn { color: var(--accent); }
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230d0d0d' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        padding-right: 40px;
+        cursor: pointer;
+      }
 
-  .optional-tag {
-    font-size: 10px; color: var(--muted);
-    font-style: italic; margin-left: 6px;
-    letter-spacing: 0; text-transform: none;
-  }
+      .char-count {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: right;
+        margin-top: -4px;
+      }
+      .char-count.warn {
+        color: var(--accent);
+      }
 
-  .btn-submit {
-    background: var(--ink);
-    color: var(--paper);
-    border: none;
-    border-radius: 6px;
-    padding: 18px 28px;
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s, opacity 0.2s;
-    width: 100%;
-  }
+      .optional-tag {
+        font-size: 10px;
+        color: var(--muted);
+        font-style: italic;
+        margin-left: 6px;
+        letter-spacing: 0;
+        text-transform: none;
+      }
 
-  .btn-submit:hover:not(:disabled) { background: #2a2a2a; }
-  .btn-submit:active:not(:disabled) { transform: scale(0.98); }
-  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+      .btn-submit {
+        background: var(--ink);
+        color: var(--paper);
+        border: none;
+        border-radius: 6px;
+        padding: 18px 28px;
+        font-family: "Syne", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.1s,
+          opacity 0.2s;
+        width: 100%;
+      }
 
-  .btn-arrow { display: inline-block; margin-left: 8px; transition: transform 0.2s; }
-  .btn-submit:hover .btn-arrow { transform: translateX(4px); }
+      .btn-submit:hover:not(:disabled) {
+        background: var(--muted);
+      }
+      .btn-submit:active:not(:disabled) {
+        transform: scale(0.98);
+      }
+      .btn-submit:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 
-  .footer-note {
-    text-align: center;
-    font-size: 11px;
-    color: var(--muted);
-    padding: 0 28px 28px;
-  }
+      .btn-arrow {
+        display: inline-block;
+        margin-left: 8px;
+        transition: transform 0.2s;
+      }
+      .btn-submit:hover .btn-arrow {
+        transform: translateX(4px);
+      }
 
-  /* ── SUCCESS ── */
-  #page-success {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 48px 32px;
-    animation: fadeUp 0.5s ease both;
-  }
+      .footer-note {
+        text-align: center;
+        font-size: 11px;
+        color: var(--muted);
+        padding: 0 28px 28px;
+      }
 
-  .success-icon {
-    width: 72px; height: 72px;
-    background: var(--ink);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 24px;
-    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
-  }
+      /* ── SUCCESS ── */
+      #page-success {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 48px 32px;
+        animation: fadeUp 0.5s ease both;
+      }
 
-  .success-icon svg { width: 32px; height: 32px; }
+      .success-icon {
+        width: 72px;
+        height: 72px;
+        background: var(--ink);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+      }
 
-  #page-success h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 28px; font-weight: 800; margin-bottom: 12px;
-  }
+      .success-icon svg {
+        width: 32px;
+        height: 32px;
+      }
 
-  #page-success p {
-    color: var(--muted); font-size: 15px; line-height: 1.6;
-    max-width: 280px; margin: 0 auto 32px;
-  }
+      #page-success h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 12px;
+      }
 
-  .btn-back {
-    background: transparent;
-    border: 1.5px solid var(--border);
-    border-radius: 6px;
-    padding: 14px 28px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 500;
-    cursor: pointer; color: var(--ink);
-    transition: border-color 0.2s, background 0.2s;
-  }
+      #page-success p {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+        max-width: 280px;
+        margin: 0 auto 32px;
+      }
 
-  .btn-back:hover { border-color: var(--ink); background: white; }
+      .btn-back {
+        background: transparent;
+        border: 1.5px solid var(--border);
+        border-radius: 6px;
+        padding: 14px 28px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        color: var(--ink);
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
 
-  /* ── ADMIN LOGIN ── */
-  #page-adminlogin {
-    align-items: center;
-    justify-content: center;
-    padding: 48px 32px;
-    animation: fadeUp 0.4s ease both;
-  }
+      .btn-back:hover {
+        border-color: var(--ink);
+        background: white;
+      }
 
-  #page-adminlogin h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px; font-weight: 800;
-    margin-bottom: 6px; text-align: center;
-  }
+      /* ── ADMIN LOGIN ── */
+      #page-adminlogin {
+        align-items: center;
+        justify-content: center;
+        padding: 48px 32px;
+        animation: fadeUp 0.4s ease both;
+      }
 
-  #page-adminlogin p {
-    color: var(--muted); font-size: 13px;
-    text-align: center; margin-bottom: 28px;
-  }
+      #page-adminlogin h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 6px;
+        text-align: center;
+      }
 
-  #page-adminlogin .field-group { width: 100%; max-width: 320px; }
+      #page-adminlogin p {
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
+        margin-bottom: 28px;
+      }
 
-  .error-msg {
-    color: var(--accent); font-size: 12px;
-    text-align: center; margin-top: 8px; height: 16px;
-  }
+      #page-adminlogin .field-group {
+        width: 100%;
+        max-width: 320px;
+      }
 
-  /* ── ADMIN PANEL ── */
-  #page-admin { flex-direction: column; animation: fadeUp 0.4s ease both; }
+      .error-msg {
+        color: var(--accent);
+        font-size: 12px;
+        text-align: center;
+        margin-top: 8px;
+        height: 16px;
+      }
 
-  .admin-header {
-    background: var(--ink); color: var(--paper);
-    padding: 24px 28px 20px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
+      /* ── ADMIN PANEL ── */
+     #page-admin { flex-direction: column; animation: fadeUp 0.4s ease both; background: var(--paper); }
 
-  .admin-header h2 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; }
+      .admin-header {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 24px 28px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-  .count-badge {
-    background: var(--accent); color: white;
-    font-size: 11px; font-weight: 700;
-    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px;
-  }
+      .admin-header h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 18px;
+        font-weight: 800;
+      }
 
-  .admin-filters {
+      .count-badge {
+        background: var(--accent);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+      }
+
+      .admin-filters {
     padding: 16px 20px 0;
     display: flex; gap: 8px; flex-wrap: wrap;
+    background: var(--paper);
   }
 
-  .filter-btn {
-    background: white; border: 1.5px solid var(--border);
-    border-radius: 20px; padding: 6px 14px;
-    font-size: 11px; font-weight: 500; cursor: pointer;
-    color: var(--muted); transition: all 0.15s;
-    font-family: 'DM Sans', sans-serif;
-  }
+      .filter-btn {
+        background: white;
+        border: 1.5px solid var(--border);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 11px;
+        font-weight: 500;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 0.15s;
+        font-family: "DM Sans", sans-serif;
+      }
 
-  .filter-btn.active, .filter-btn:hover {
-    background: var(--ink); color: var(--paper); border-color: var(--ink);
-  }
+      .filter-btn.active,
+      .filter-btn:hover {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
 
-  .admin-body { padding: 16px 20px 40px; flex: 1; }
+      .admin-body { padding: 16px 20px 40px; flex: 1; background: var(--paper); }
+     
 
-  .loading-state {
-    text-align: center; padding: 60px 20px; color: var(--muted);
-  }
+      .loading-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
 
-  .spinner {
-    width: 28px; height: 28px;
-    border: 2px solid var(--border);
-    border-top-color: var(--ink);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto 16px;
-  }
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 2px solid var(--border);
+        border-top-color: var(--ink);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin: 0 auto 16px;
+      }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-  .entry-card {
-    background: white; border: 1.5px solid var(--border);
-    border-radius: 8px; padding: 16px 18px; margin-bottom: 12px;
-    animation: fadeUp 0.3s ease both;
-  }
+      .entry-card {
+        background: white;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 16px 18px;
+        margin-bottom: 12px;
+        animation: fadeUp 0.3s ease both;
+      }
 
-  .entry-meta {
-    display: flex; justify-content: space-between;
-    align-items: center; margin-bottom: 10px;
-  }
+      .entry-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
 
-  .entry-category {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; background: var(--ink);
-    color: var(--paper); padding: 3px 8px; border-radius: 3px;
-  }
+      .entry-category {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        background: var(--ink);
+        color: var(--paper);
+        padding: 3px 8px;
+        border-radius: 3px;
+      }
 
-  .entry-date { font-size: 11px; color: var(--muted); }
-  .entry-name { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
-  .entry-msg { font-size: 14px; line-height: 1.6; color: var(--ink); }
+      .entry-date {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .entry-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .entry-msg {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--ink);
+      }
 
-  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
-  .empty-state svg { margin-bottom: 16px; opacity: 0.3; }
-  .empty-state p { font-size: 14px; }
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+      .empty-state svg {
+        margin-bottom: 16px;
+        opacity: 0.3;
+      }
+      .empty-state p {
+        font-size: 14px;
+      }
 
-  .admin-actions {
-    display: flex; gap: 10px; justify-content: center;
-    padding: 0 20px 8px; flex-wrap: wrap;
-  }
+      .admin-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        padding: 0 20px 8px;
+        flex-wrap: wrap;
+      }
 
-  .btn-secondary {
-    background: transparent; border: 1.5px solid var(--border);
-    border-radius: 6px; padding: 10px 18px;
-    font-size: 12px; cursor: pointer; color: var(--muted);
-    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
-  }
+      .btn-secondary {
+        background: transparent;
+        border: 1.5px solid var(--border);
+        border-radius: 6px;
+        padding: 10px 18px;
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
 
-  .btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
-  .btn-secondary.danger { color: #c0392b; }
-  .btn-secondary.danger:hover { border-color: #c0392b; background: #fff5f5; }
+      .btn-secondary:hover {
+        border-color: var(--muted);
+        color: var(--ink);
+      }
+      .btn-secondary.danger {
+        color: #c0392b;
+      }
+      .btn-secondary.danger:hover {
+        border-color: #c0392b;
+        background: #fff5f5;
+      }
 
-  .btn-exit-admin {
-    display: block; margin: 12px auto 0;
-    background: transparent; border: none;
-    font-size: 12px; color: var(--muted);
-    cursor: pointer; text-decoration: underline;
-    font-family: 'DM Sans', sans-serif;
-  }
+      .btn-exit-admin {
+        display: block;
+        margin: 12px auto 0;
+        background: transparent;
+        border: none;
+        font-size: 12px;
+        color: var(--muted);
+        cursor: pointer;
+        text-decoration: underline;
+        font-family: "DM Sans", sans-serif;
+      }
 
-  .admin-trigger {
-    position: fixed; bottom: 18px; right: 18px;
-    background: rgba(13,13,13,0.06); border: none;
-    border-radius: 50%; width: 36px; height: 36px;
-    cursor: pointer; display: flex; align-items: center;
-    justify-content: center; transition: background 0.2s; z-index: 100;
-  }
+      .admin-trigger {
+        position: fixed;
+        bottom: 18px;
+        right: 18px;
+        background: rgba(13, 13, 13, 0.06);
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        z-index: 100;
+      }
 
-  .admin-trigger:hover { background: rgba(13,13,13,0.12); }
+      .admin-trigger:hover {
+        background: rgba(13, 13, 13, 0.12);
+      }
 
-  .toast {
-    position: fixed; bottom: 64px; left: 50%; transform: translateX(-50%);
-    background: var(--ink); color: var(--paper);
-    padding: 10px 20px; border-radius: 6px;
-    font-size: 13px; font-weight: 500;
-    opacity: 0; transition: opacity 0.3s;
-    pointer-events: none; z-index: 200;
-    white-space: nowrap;
-  }
+      .toast {
+        position: fixed;
+        bottom: 64px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--ink);
+        color: var(--paper);
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        z-index: 200;
+        white-space: nowrap;
+      }
 
-  .toast.show { opacity: 1; }
-</style>
-</head>
-<body>
+      .toast.show {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- FORM -->
+    <div
+      class="page active"
+      id="page-form"
+      style="animation: fadeUp 0.5s ease both"
+    >
+      <div class="header-band">
+        <div class="brand">
+          <img
+            src="/images_2-removebg-preview.png"
+            style="
+              height: 80px;
+              width: 80px;
+              object-fit: contain;
+              vertical-align: middle;
+              margin-right: 10px;
+            "
+          />
+          <span style="vertical-align: middle">Trolleys Utilities</span>
+        </div>
+        <div class="display">
+          <h1>Tell us what<br />you <span>think.</span></h1>
+          <div class="divider"></div>
+          <p class="header-subtitle">
+            Your feedback shapes how we serve you.<br />Every message is read by
+            our team.
+          </p>
+        </div>
+      </div>
 
-<!-- FORM -->
-<div class="page active" id="page-form" style="animation: fadeUp 0.5s ease both;">
-  <div class="header-band">
-    <div class="brand">Trolleys Utilities</div>
-    <h1>Tell us what<br>you <span>think.</span></h1>
-    <div class="divider"></div>
-    <p class="header-subtitle">Your feedback shapes how we serve you.<br>Every message is read by our team.</p>
-  </div>
+      <div class="form-body">
+        <div class="field-group">
+          <label>Category</label>
+          <select id="category">
+            <option value="" disabled selected>Select a category…</option>
+            <option value="Product Quality">Product Quality</option>
+            <option value="Customer Service">Customer Service</option>
+            <option value="Pricing">Pricing</option>
+            <option value="Store Experience">Store Experience</option>
+            <option value="Suggestion">Suggestion</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-  <div class="form-body">
-    <div class="field-group">
-      <label>Category</label>
-      <select id="category">
-        <option value="" disabled selected>Select a category…</option>
-        <option value="Product Quality">Product Quality</option>
-        <option value="Customer Service">Customer Service</option>
-        <option value="Pricing">Pricing</option>
-        <option value="Store Experience">Store Experience</option>
-        <option value="Delivery & Fulfilment">Delivery &amp; Fulfilment</option>
-        <option value="Suggestion">Suggestion</option>
-        <option value="Other">Other</option>
-      </select>
+        <div class="field-group">
+          <label
+            >Your Message <span style="color: var(--accent)">*</span></label
+          >
+          <textarea
+            id="message"
+            placeholder="Describe your experience or share your idea…"
+            maxlength="600"
+            oninput="updateCount()"
+          ></textarea>
+          <div class="char-count" id="charCount">0 / 600</div>
+        </div>
+
+        <div class="field-group">
+          <label>Your Name <span class="optional-tag">optional</span></label>
+          <input
+            type="text"
+            id="name"
+            placeholder="e.g. John Doe."
+            maxlength="60"
+          />
+        </div>
+
+        <button class="btn-submit" id="submit-btn" onclick="submitForm()">
+          Send Feedback <span class="btn-arrow">→</span>
+        </button>
+      </div>
+      <p class="footer-note">
+        Your feedback is confidential and used only to improve our services.
+      </p>
     </div>
 
-    <div class="field-group">
-      <label>Your Message <span style="color:var(--accent)">*</span></label>
-      <textarea id="message" placeholder="Describe your experience or share your idea…" maxlength="600" oninput="updateCount()"></textarea>
-      <div class="char-count" id="charCount">0 / 600</div>
+    <!-- SUCCESS -->
+    <div class="page" id="page-success">
+      <div class="success-icon">
+        <svg viewBox="0 0 32 32" fill="none">
+          <path
+            d="M6 16l8 8 12-14"
+            stroke="#f5f0e8"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <h2>Message Received.</h2>
+      <p>
+        We appreciate you taking the time. Your feedback will help us do better.
+      </p>
+      <button class="btn-back" onclick="showPage('page-form')">
+        Submit Another
+      </button>
     </div>
 
-    <div class="field-group">
-      <label>Your Name <span class="optional-tag">optional</span></label>
-      <input type="text" id="name" placeholder="e.g. Amaka O." maxlength="60">
+    <!-- ADMIN LOGIN -->
+    <div class="page" id="page-adminlogin">
+      <h2>Admin Access</h2>
+      <p>Enter the admin password to view submissions.</p>
+      <div class="field-group">
+        <label>Password</label>
+        <input
+          type="password"
+          id="admin-pw"
+          placeholder="••••••••"
+          onkeydown="if (event.key === 'Enter') checkAdmin();"
+        />
+        <div class="error-msg" id="pw-error"></div>
+      </div>
+      <br />
+      <button
+        class="btn-submit"
+        onclick="checkAdmin()"
+        style="max-width: 320px"
+      >
+        Enter →
+      </button>
+      <button class="btn-exit-admin" onclick="showPage('page-form')">
+        ← Back to form
+      </button>
     </div>
 
-    <button class="btn-submit" id="submit-btn" onclick="submitForm()">
-      Send Feedback <span class="btn-arrow">→</span>
+    <!-- ADMIN PANEL -->
+    <div class="page" id="page-admin">
+      <div class="admin-header">
+        <h2>Submissions</h2>
+        <span class="count-badge" id="admin-count">—</span>
+      </div>
+      <div class="admin-filters" id="admin-filters"></div>
+      <div class="admin-body" id="admin-list">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading submissions…</p>
+        </div>
+      </div>
+      <div class="admin-actions">
+        <button class="btn-secondary" onclick="loadAdmin()">↻ Refresh</button>
+        <button class="btn-secondary danger" onclick="clearAll()">
+          Clear All
+        </button>
+      </div>
+      <button class="btn-exit-admin" onclick="showPage('page-form')">
+        ← Back to form
+      </button>
+    </div>
+
+    <!-- Admin trigger -->
+    <button
+      class="admin-trigger"
+      onclick="showPage('page-adminlogin')"
+      title="Admin"
+    >
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="4" r="2.5" stroke="#8a8070" stroke-width="1.3" />
+        <path
+          d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5"
+          stroke="#8a8070"
+          stroke-width="1.3"
+          stroke-linecap="round"
+        />
+      </svg>
     </button>
-  </div>
-  <p class="footer-note">Your feedback is confidential and used only to improve our services.</p>
-</div>
 
-<!-- SUCCESS -->
-<div class="page" id="page-success">
-  <div class="success-icon">
-    <svg viewBox="0 0 32 32" fill="none"><path d="M6 16l8 8 12-14" stroke="#f5f0e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </div>
-  <h2>Message Received.</h2>
-  <p>We appreciate you taking the time. Your feedback will help us do better.</p>
-  <button class="btn-back" onclick="showPage('page-form')">Submit Another</button>
-</div>
+    <div class="toast" id="toast"></div>
 
-<!-- ADMIN LOGIN -->
-<div class="page" id="page-adminlogin">
-  <h2>Admin Access</h2>
-  <p>Enter the admin password to view submissions.</p>
-  <div class="field-group">
-    <label>Password</label>
-    <input type="password" id="admin-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkAdmin()">
-    <div class="error-msg" id="pw-error"></div>
-  </div>
-  <br>
-  <button class="btn-submit" onclick="checkAdmin()" style="max-width:320px">Enter →</button>
-  <button class="btn-exit-admin" onclick="showPage('page-form')">← Back to form</button>
-</div>
+    <script>
+      // ── CONFIG ──
+      const SUPABASE_URL = "https://bzwwtycpesttxqufzknp.supabase.co";
+      const SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6d3d0eWNwZXN0dHhxdWZ6a25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI5MzcsImV4cCI6MjA5NjA2ODkzN30.m8z0qshLraeDNjfBcWH2CPSbzfcg3cD4sZcNVlo3j3M";
+      const ADMIN_PASSWORD = "trolleys2024"; // ← CHANGE THIS before going live
+      const TABLE = "suggestions";
 
-<!-- ADMIN PANEL -->
-<div class="page" id="page-admin">
-  <div class="admin-header">
-    <h2>Submissions</h2>
-    <span class="count-badge" id="admin-count">—</span>
-  </div>
-  <div class="admin-filters" id="admin-filters"></div>
-  <div class="admin-body" id="admin-list">
-    <div class="loading-state"><div class="spinner"></div><p>Loading submissions…</p></div>
-  </div>
-  <div class="admin-actions">
-    <button class="btn-secondary" onclick="loadAdmin()">↻ Refresh</button>
-    <button class="btn-secondary danger" onclick="clearAll()">Clear All</button>
-  </div>
-  <button class="btn-exit-admin" onclick="showPage('page-form')">← Back to form</button>
-</div>
-
-<!-- Admin trigger -->
-<button class="admin-trigger" onclick="showPage('page-adminlogin')" title="Admin">
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <circle cx="7" cy="4" r="2.5" stroke="#8a8070" stroke-width="1.3"/>
-    <path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#8a8070" stroke-width="1.3" stroke-linecap="round"/>
-  </svg>
-</button>
-
-<div class="toast" id="toast"></div>
-
-<script>
-  // ── CONFIG ──
-  const SUPABASE_URL  = 'https://bzwwtycpesttxqufzknp.supabase.co';
-  const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6d3d0eWNwZXN0dHhxdWZ6a25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI5MzcsImV4cCI6MjA5NjA2ODkzN30.m8z0qshLraeDNjfBcWH2CPSbzfcg3cD4sZcNVlo3j3M';
-  const ADMIN_PASSWORD = 'trolleys2024'; // ← CHANGE THIS before going live
-  const TABLE = 'suggestions';
-
-  // ── SUPABASE HELPERS ──
-  async function sbInsert(row) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(row)
-    });
-    if (!res.ok) throw new Error(await res.text());
-  }
-
-  async function sbFetch(categoryFilter) {
-    let url = `${SUPABASE_URL}/rest/v1/${TABLE}?order=created_at.desc`;
-    if (categoryFilter && categoryFilter !== 'All') {
-      url += `&category=eq.${encodeURIComponent(categoryFilter)}`;
-    }
-    const res = await fetch(url, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
+      // ── SUPABASE HELPERS ──
+      async function sbInsert(row) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+          method: "POST",
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify(row),
+        });
+        if (!res.ok) throw new Error(await res.text());
       }
-    });
-    if (!res.ok) throw new Error(await res.text());
-    return res.json();
-  }
 
-  async function sbDelete() {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=neq.00000000-0000-0000-0000-000000000000`, {
-      method: 'DELETE',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
+      async function sbFetch(categoryFilter) {
+        let url = `${SUPABASE_URL}/rest/v1/${TABLE}?order=created_at.desc`;
+        if (categoryFilter && categoryFilter !== "All") {
+          url += `&category=eq.${encodeURIComponent(categoryFilter)}`;
+        }
+        const res = await fetch(url, {
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+          },
+        });
+        if (!res.ok) throw new Error(await res.text());
+        return res.json();
       }
-    });
-    if (!res.ok) throw new Error(await res.text());
-  }
 
-  // ── UI HELPERS ──
-  function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    window.scrollTo(0, 0);
-  }
+      async function sbDelete() {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/${TABLE}?id=neq.00000000-0000-0000-0000-000000000000`,
+          {
+            method: "DELETE",
+            headers: {
+              apikey: SUPABASE_KEY,
+              Authorization: `Bearer ${SUPABASE_KEY}`,
+            },
+          },
+        );
+        if (!res.ok) throw new Error(await res.text());
+      }
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
+      // ── UI HELPERS ──
+      function showPage(id) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        window.scrollTo(0, 0);
+      }
 
-  function updateCount() {
-    const msg = document.getElementById('message').value;
-    const el = document.getElementById('charCount');
-    el.textContent = `${msg.length} / 600`;
-    el.classList.toggle('warn', msg.length > 540);
-  }
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2500);
+      }
 
-  function formatDate(iso) {
-    return new Date(iso).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' });
-  }
+      function updateCount() {
+        const msg = document.getElementById("message").value;
+        const el = document.getElementById("charCount");
+        el.textContent = `${msg.length} / 600`;
+        el.classList.toggle("warn", msg.length > 540);
+      }
 
-  // ── FORM SUBMIT ──
-  async function submitForm() {
-    const cat  = document.getElementById('category').value;
-    const msg  = document.getElementById('message').value.trim();
-    const name = document.getElementById('name').value.trim();
+      function formatDate(iso) {
+        return new Date(iso).toLocaleString("en-NG", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        });
+      }
 
-    if (!cat) { showToast('Please select a category.'); return; }
-    if (!msg || msg.length < 5) { showToast('Please write your message.'); return; }
+      // ── FORM SUBMIT ──
+      async function submitForm() {
+        const cat = document.getElementById("category").value;
+        const msg = document.getElementById("message").value.trim();
+        const name = document.getElementById("name").value.trim();
 
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
+        if (!cat) {
+          showToast("Please select a category.");
+          return;
+        }
+        if (!msg || msg.length < 5) {
+          showToast("Please write your message.");
+          return;
+        }
 
-    try {
-      await sbInsert({ category: cat, message: msg, name: name || 'Anonymous' });
+        const btn = document.getElementById("submit-btn");
+        btn.disabled = true;
+        btn.textContent = "Sending…";
 
-      document.getElementById('category').value = '';
-      document.getElementById('message').value = '';
-      document.getElementById('name').value = '';
-      updateCount();
+        try {
+          await sbInsert({
+            category: cat,
+            message: msg,
+            name: name || "Anonymous",
+          });
 
-      showPage('page-success');
-    } catch (err) {
-      showToast('Failed to send. Please try again.');
-      console.error(err);
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = 'Send Feedback <span class="btn-arrow">→</span>';
-    }
-  }
+          document.getElementById("category").value = "";
+          document.getElementById("message").value = "";
+          document.getElementById("name").value = "";
+          updateCount();
 
-  // ── ADMIN ──
-  let activeFilter = 'All';
+          showPage("page-success");
+        } catch (err) {
+          showToast("Failed to send. Please try again.");
+          console.error(err);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = 'Send Feedback <span class="btn-arrow">→</span>';
+        }
+      }
 
-  function checkAdmin() {
-    const pw = document.getElementById('admin-pw').value;
-    if (pw === ADMIN_PASSWORD) {
-      document.getElementById('admin-pw').value = '';
-      document.getElementById('pw-error').textContent = '';
-      showPage('page-admin');
-      loadAdmin();
-    } else {
-      document.getElementById('pw-error').textContent = 'Incorrect password.';
-    }
-  }
+      // ── ADMIN ──
+      let activeFilter = "All";
 
-  async function loadAdmin(filter) {
-    if (filter !== undefined) activeFilter = filter;
+      function checkAdmin() {
+        const pw = document.getElementById("admin-pw").value;
+        if (pw === ADMIN_PASSWORD) {
+          document.getElementById("admin-pw").value = "";
+          document.getElementById("pw-error").textContent = "";
+          showPage("page-admin");
+          loadAdmin();
+        } else {
+          document.getElementById("pw-error").textContent =
+            "Incorrect password.";
+        }
+      }
 
-    const list = document.getElementById('admin-list');
-    list.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>';
+      async function loadAdmin(filter) {
+        if (filter !== undefined) activeFilter = filter;
 
-    try {
-      const data = await sbFetch(activeFilter);
+        const list = document.getElementById("admin-list");
+        list.innerHTML =
+          '<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>';
 
-      // Build filter buttons from unique categories
-      const allData = await sbFetch('All');
-      const cats = ['All', ...new Set(allData.map(e => e.category))];
-      const filtersEl = document.getElementById('admin-filters');
-      filtersEl.innerHTML = cats.map(c =>
-        `<button class="filter-btn ${c === activeFilter ? 'active' : ''}" onclick="loadAdmin('${c}')">${c} ${c === 'All' ? `(${allData.length})` : `(${allData.filter(e=>e.category===c).length})`}</button>`
-      ).join('');
+        try {
+          const data = await sbFetch(activeFilter);
 
-      document.getElementById('admin-count').textContent = data.length;
+          // Build filter buttons from unique categories
+          const allData = await sbFetch("All");
+          const cats = ["All", ...new Set(allData.map((e) => e.category))];
+          const filtersEl = document.getElementById("admin-filters");
+          filtersEl.innerHTML = cats
+            .map(
+              (c) =>
+                `<button class="filter-btn ${c === activeFilter ? "active" : ""}" onclick="loadAdmin('${c}')">${c} ${c === "All" ? `(${allData.length})` : `(${allData.filter((e) => e.category === c).length})`}</button>`,
+            )
+            .join("");
 
-      if (data.length === 0) {
-        list.innerHTML = `
+          document.getElementById("admin-count").textContent = data.length;
+
+          if (data.length === 0) {
+            list.innerHTML = `
           <div class="empty-state">
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
               <rect x="8" y="12" width="32" height="28" rx="3" stroke="#8a8070" stroke-width="2"/>
@@ -617,37 +928,45 @@
             </svg>
             <p>No submissions yet.</p>
           </div>`;
-        return;
-      }
+            return;
+          }
 
-      list.innerHTML = data.map(e => `
+          list.innerHTML = data
+            .map(
+              (e) => `
         <div class="entry-card">
           <div class="entry-meta">
             <span class="entry-category">${e.category}</span>
             <span class="entry-date">${formatDate(e.created_at)}</span>
           </div>
-          <div class="entry-name">${e.name || 'Anonymous'}</div>
-          <div class="entry-msg">${String(e.message).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+          <div class="entry-name">${e.name || "Anonymous"}</div>
+          <div class="entry-msg">${String(e.message).replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
         </div>
-      `).join('');
+      `,
+            )
+            .join("");
+        } catch (err) {
+          list.innerHTML = `<div class="empty-state"><p style="color:var(--accent)">Error loading data. Check your Supabase table exists.</p></div>`;
+          console.error(err);
+        }
+      }
 
-    } catch (err) {
-      list.innerHTML = `<div class="empty-state"><p style="color:var(--accent)">Error loading data. Check your Supabase table exists.</p></div>`;
-      console.error(err);
-    }
-  }
-
-  async function clearAll() {
-    if (!confirm('Delete ALL submissions from the database? This cannot be undone.')) return;
-    try {
-      await sbDelete();
-      showToast('All submissions deleted.');
-      loadAdmin();
-    } catch (err) {
-      showToast('Delete failed.');
-      console.error(err);
-    }
-  }
-</script>
-</body>
+      async function clearAll() {
+        if (
+          !confirm(
+            "Delete ALL submissions from the database? This cannot be undone.",
+          )
+        )
+          return;
+        try {
+          await sbDelete();
+          showToast("All submissions deleted.");
+          loadAdmin();
+        } catch (err) {
+          showToast("Delete failed.");
+          console.error(err);
+        }
+      }
+    </script>
+  </body>
 </html>
