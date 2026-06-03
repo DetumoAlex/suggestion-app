@@ -77,7 +77,7 @@
 
       /* ── FORM PAGE ── */
       .header-band {
-        background: var(--ink);
+        background: white;
         color: var(--paper);
         padding: 28px 32px 24px;
         position: relative;
@@ -116,6 +116,7 @@
       .header-band h1 {
         font-family: "Syne", sans-serif;
         font-size: clamp(28px, 7vw, 40px);
+        color: var(--border);
         font-weight: 800;
         line-height: 1.05;
         letter-spacing: -0.5px;
@@ -124,12 +125,16 @@
       .header-band h1 span {
         color: var(--accent);
       }
+      
+      .brand span{
+        font-size: 1.2em;
+      }
 
       .header-subtitle {
         margin-top: 10px;
         font-size: 13px;
         font-weight: 300;
-        color: #b0a898;
+        color: #000000;
         line-height: 1.5;
       }
 
@@ -159,7 +164,7 @@
         font-weight: 500;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color: var(--muted);
+        color: white;
       }
 
       input,
@@ -215,7 +220,7 @@
 
       .optional-tag {
         font-size: 10px;
-        color: var(--muted);
+        color: white;
         font-style: italic;
         margin-left: 6px;
         letter-spacing: 0;
@@ -340,13 +345,14 @@
       #page-adminlogin h2 {
         font-family: "Syne", sans-serif;
         font-size: 22px;
+        color: #f5f0e8;
         font-weight: 800;
         margin-bottom: 6px;
         text-align: center;
       }
 
       #page-adminlogin p {
-        color: var(--muted);
+        color: #f5f0e8;
         font-size: 13px;
         text-align: center;
         margin-bottom: 28px;
@@ -604,7 +610,7 @@
               width: 80px;
               object-fit: contain;
               vertical-align: middle;
-              margin-right: 10px;
+              margin-right: 5px;
             "
           />
           <span style="vertical-align: middle">Trolleys Utilities</span>
