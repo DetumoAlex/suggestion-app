@@ -109,6 +109,11 @@
         align-items: center;
       }
 
+      .form-body label,
+      #page-adminlogin label {
+        color: var(--paper);
+      }
+
       .display {
         margin-left: 5rem;
       }
@@ -249,6 +254,7 @@
           box-shadow 0.2s;
         width: 100%;
         color: black;
+        appearance: none;
         -webkit-appearance: none;
       }
 
@@ -276,21 +282,35 @@
 
       .char-count {
         font-size: 11px;
-        color: var(--muted);
+        color: #f5f0e8;
         text-align: right;
         margin-top: -4px;
       }
       .char-count.warn {
-        color: var(--accent);
+        color: #fff;
       }
 
       .optional-tag {
         font-size: 10px;
-        color: white;
+        color: var(--paper);
         font-style: italic;
         margin-left: 6px;
         letter-spacing: 0;
         text-transform: none;
+      }
+
+      .helper-note {
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--paper);
+        background: rgba(13, 13, 13, 0.18);
+        border: 1px solid rgba(245, 240, 232, 0.18);
+        border-radius: 8px;
+        padding: 12px 14px;
+      }
+
+      .helper-note strong {
+        color: #fff;
       }
 
       .btn-submit {
@@ -335,7 +355,7 @@
       .footer-note {
         text-align: center;
         font-size: 11px;
-        color: var(--muted);
+        color: #f5f0e8;
         padding: 0 28px 28px;
       }
 
@@ -373,7 +393,7 @@
       }
 
       #page-success p {
-        color: var(--muted);
+        color: var(--paper);
         font-size: 15px;
         line-height: 1.6;
         max-width: 280px;
@@ -411,14 +431,14 @@
       #page-adminlogin h2 {
         font-family: "Syne", sans-serif;
         font-size: 22px;
-        color: #f5f0e8;
+        color: #fff;
         font-weight: 800;
         margin-bottom: 6px;
         text-align: center;
       }
 
       #page-adminlogin p {
-        color: #f5f0e8;
+        color: #fff;
         font-size: 13px;
         text-align: center;
         margin-bottom: 28px;
@@ -457,7 +477,7 @@
 
       .count-badge {
         background: var(--accent);
-        color: white;
+        color: #fff;
         font-size: 11px;
         font-weight: 700;
         padding: 4px 10px;
@@ -479,7 +499,7 @@
         font-size: 11px;
         font-weight: 500;
         cursor: pointer;
-        color: var(--muted);
+        color: var(--ink);
         transition: all 0.15s;
         font-family: "DM Sans", sans-serif;
       }
@@ -553,6 +573,14 @@
         color: var(--muted);
         margin-bottom: 6px;
       }
+
+      .entry-contact {
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
       .entry-msg {
         font-size: 14px;
         line-height: 1.6;
@@ -587,7 +615,7 @@
         padding: 10px 18px;
         font-size: 12px;
         cursor: pointer;
-        color: var(--muted);
+        color: var(--ink);
         transition: all 0.2s;
         font-family: "DM Sans", sans-serif;
       }
@@ -610,7 +638,7 @@
         background: transparent;
         border: none;
         font-size: 12px;
-        color: var(--muted);
+        color: var(--paper);
         cursor: pointer;
         text-decoration: underline;
         font-family: "DM Sans", sans-serif;
@@ -620,11 +648,11 @@
         position: fixed;
         bottom: 18px;
         right: 18px;
-        background: rgba(13, 13, 13, 0.06);
-        border: none;
+        background: rgba(13, 13, 13, 0.18);
+        border: 1px solid rgba(245, 240, 232, 0.5);
         border-radius: 50%;
-        width: 36px;
-        height: 36px;
+        width: 42px;
+        height: 42px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -634,7 +662,12 @@
       }
 
       .admin-trigger:hover {
-        background: rgba(13, 13, 13, 0.12);
+        background: rgba(13, 13, 13, 0.28);
+      }
+
+      .admin-trigger svg {
+        width: 18px;
+        height: 18px;
       }
 
       .toast {
@@ -681,6 +714,11 @@
       .admin-trigger {
         right: 14px;
         bottom: 14px;
+      }
+
+      .admin-trigger circle,
+      .admin-trigger path {
+        stroke: #f5f0e8;
       }
 
       input:focus-visible,
@@ -759,6 +797,35 @@
           />
         </div>
 
+        <div class="field-group">
+          <label>Email <span class="optional-tag">optional</span></label>
+          <input
+            type="email"
+            id="email"
+            placeholder="e.g. john@example.com"
+            maxlength="120"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="field-group">
+          <label>Phone Number <span class="optional-tag">optional</span></label>
+          <input
+            type="tel"
+            id="phone"
+            placeholder="e.g. +234 800 000 0000"
+            maxlength="30"
+            autocomplete="tel"
+          />
+        </div>
+
+        <p class="helper-note">
+          <strong>Disclaimer:</strong> your details are collected for records
+          purposes only. If available, we may also use them to share promotions
+          or special offers. Please provide at least an email address or phone
+          number.
+        </p>
+
         <button class="btn-submit" id="submit-btn" onclick="submitForm()">
           Send Feedback <span class="btn-arrow">→</span>
         </button>
@@ -832,9 +899,6 @@
       </div>
       <div class="admin-actions">
         <button class="btn-secondary" onclick="loadAdmin()">↻ Refresh</button>
-        <button class="btn-secondary danger" onclick="clearAll()">
-          Clear All
-        </button>
       </div>
       <button class="btn-exit-admin" onclick="showPage('page-form')">
         ← Back to form
@@ -883,8 +947,8 @@
         if (!res.ok) throw new Error(await res.text());
       }
 
-      async function sbFetch(categoryFilter) {
-        let url = `${SUPABASE_URL}/rest/v1/${TABLE}?order=created_at.desc`;
+      async function sbFetch(categoryFilter, sortOrder = "desc") {
+        let url = `${SUPABASE_URL}/rest/v1/${TABLE}?order=created_at.${sortOrder}`;
         if (categoryFilter && categoryFilter !== "All") {
           url += `&category=eq.${encodeURIComponent(categoryFilter)}`;
         }
@@ -947,6 +1011,8 @@
         const cat = document.getElementById("category").value;
         const msg = document.getElementById("message").value.trim();
         const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
 
         if (!cat) {
           showToast("Please select a category.");
@@ -954,6 +1020,10 @@
         }
         if (!msg || msg.length < 5) {
           showToast("Please write your message.");
+          return;
+        }
+        if (!email && !phone) {
+          showToast("Please provide at least an email address or phone number.");
           return;
         }
 
@@ -966,11 +1036,15 @@
             category: cat,
             message: msg,
             name: name || "Anonymous",
+            email: email || null,
+            phone: phone || null,
           });
 
           document.getElementById("category").value = "";
           document.getElementById("message").value = "";
           document.getElementById("name").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("phone").value = "";
           updateCount();
 
           showPage("page-success");
@@ -985,6 +1059,7 @@
 
       // ── ADMIN ──
       let activeFilter = "All";
+      let activeSort = "desc";
 
       function checkAdmin() {
         const pw = document.getElementById("admin-pw").value;
@@ -999,18 +1074,19 @@
         }
       }
 
-      async function loadAdmin(filter) {
+      async function loadAdmin(filter, sortOrder) {
         if (filter !== undefined) activeFilter = filter;
+        if (sortOrder !== undefined) activeSort = sortOrder;
 
         const list = document.getElementById("admin-list");
         list.innerHTML =
           '<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>';
 
         try {
-          const data = await sbFetch(activeFilter);
+          const data = await sbFetch(activeFilter, activeSort);
 
           // Build filter buttons from unique categories
-          const allData = await sbFetch("All");
+          const allData = await sbFetch("All", activeSort);
           const cats = ["All", ...new Set(allData.map((e) => e.category))];
           const filtersEl = document.getElementById("admin-filters");
           filtersEl.innerHTML = cats
@@ -1018,7 +1094,11 @@
               (c) =>
                 `<button class="filter-btn ${c === activeFilter ? "active" : ""}" onclick="loadAdmin('${c}')">${c} ${c === "All" ? `(${allData.length})` : `(${allData.filter((e) => e.category === c).length})`}</button>`,
             )
-            .join("");
+            .join("") +
+            `
+              <button class="filter-btn ${activeSort === "desc" ? "active" : ""}" onclick="loadAdmin(undefined, 'desc')">Newest first</button>
+              <button class="filter-btn ${activeSort === "asc" ? "active" : ""}" onclick="loadAdmin(undefined, 'asc')">Oldest first</button>
+            `;
 
           document.getElementById("admin-count").textContent = data.length;
 
@@ -1043,6 +1123,11 @@
             <span class="entry-date">${formatDate(e.created_at)}</span>
           </div>
           <div class="entry-name">${e.name || "Anonymous"}</div>
+          <div class="entry-contact">
+            ${e.email ? `Email: ${String(e.email).replace(/</g, "&lt;").replace(/>/g, "&gt;")}` : ""}
+            ${e.email && e.phone ? "<br />" : ""}
+            ${e.phone ? `Phone: ${String(e.phone).replace(/</g, "&lt;").replace(/>/g, "&gt;")}` : ""}
+          </div>
           <div class="entry-msg">${String(e.message).replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
         </div>
       `,
@@ -1054,22 +1139,6 @@
         }
       }
 
-      async function clearAll() {
-        if (
-          !confirm(
-            "Delete ALL submissions from the database? This cannot be undone.",
-          )
-        )
-          return;
-        try {
-          await sbDelete();
-          showToast("All submissions deleted.");
-          loadAdmin();
-        } catch (err) {
-          showToast("Delete failed.");
-          console.error(err);
-        }
-      }
     </script>
   </body>
 </html>
