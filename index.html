@@ -4,24 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trolleys Utilities — Your Voice</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
     <style>
-    :root {
-  --ink: #0d0d0d;
-  --paper: #f5f0e8;
-  --accent: #156819;
-  --muted: #8a8070;
-  --border: #ca0a0a;
-}
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+      :root {
+        --ink: #0d0d0d;
+        --paper: #f5f0e8;
+        --accent: #156819;
+        --muted: #8a8070;
+        --border: #ca0a0a;
+        --status-open: #ca0a0a;
+        --status-progress: #d97706;
+        --status-resolved: #156819;
       }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
 
       body {
         background: var(--accent);
@@ -42,40 +38,20 @@
         opacity: 0.5;
       }
 
-      .page {
-        display: none;
-        min-height: 100vh;
-        position: relative;
-        z-index: 1;
-      }
-      .page.active {
-        display: flex;
-        flex-direction: column;
-      }
+      .page { display: none; min-height: 100vh; position: relative; z-index: 1; }
+      .page.active { display: flex; flex-direction: column; }
 
       @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-
       @keyframes popIn {
-        from {
-          transform: scale(0);
-          opacity: 0;
-        }
-        to {
-          transform: scale(1);
-          opacity: 1;
-        }
+        from { transform: scale(0); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
       }
+      @keyframes spin { to { transform: rotate(360deg); } }
 
-      /* ── FORM PAGE ── */
+      /* ── HEADER ── */
       .header-band {
         background: white;
         color: var(--paper);
@@ -84,19 +60,15 @@
         display: flex;
         overflow: hidden;
       }
-
       .header-band::after {
         content: "";
         position: absolute;
-        right: -30px;
-        top: -30px;
-        width: 140px;
-        height: 140px;
+        right: -30px; top: -30px;
+        width: 140px; height: 140px;
         border-radius: 50%;
         background: var(--accent);
         opacity: 0.18;
       }
-
       .brand {
         font-family: "Syne", sans-serif;
         font-size: 13px;
@@ -108,82 +80,8 @@
         display: flex;
         align-items: center;
       }
-
-      .form-body label,
-      #page-adminlogin label {
-        color: var(--paper);
-      }
-
-      .display {
-        margin-left: 5rem;
-      }
-
-      /* Responsive tweaks */
-      @media (max-width: 760px) {
-        .header-band {
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 20px 18px;
-        }
-
-        .header-band::after {
-          right: -20px;
-          top: -20px;
-          width: 100px;
-          height: 100px;
-        }
-
-        .brand {
-          margin-bottom: 12px;
-        }
-
-        .display {
-          margin-left: 0;
-          margin-top: 6px;
-        }
-
-        .form-body {
-          padding: 20px 18px 28px;
-        }
-
-        textarea {
-          min-height: 110px;
-        }
-
-        .admin-header {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 8px;
-        }
-
-        .admin-actions {
-          justify-content: space-between;
-          padding: 8px 12px 20px;
-        }
-      }
-
-      @media (max-width: 420px) {
-        .brand img {
-          height: 56px;
-          width: 56px;
-        }
-
-        .header-band h1 {
-          font-size: clamp(20px, 9vw, 28px);
-        }
-
-        .header-band {
-          padding: 16px 14px;
-        }
-
-        .btn-submit {
-          padding: 14px 18px;
-          font-size: 14px;
-        }
-
-        .form-body { gap: 16px; }
-      }
-
+      .brand span { font-size: 1.2em; }
+      .display { margin-left: 5rem; }
       .header-band h1 {
         font-family: "Syne", sans-serif;
         font-size: clamp(28px, 7vw, 40px);
@@ -192,30 +90,17 @@
         line-height: 1.05;
         letter-spacing: -0.5px;
       }
-
-      .header-band h1 span {
-        color: var(--accent);
-      }
-      
-      .brand span{
-        font-size: 1.2em;
-      }
-
+      .header-band h1 span { color: var(--accent); }
       .header-subtitle {
         margin-top: 10px;
         font-size: 13px;
         font-weight: 300;
-        color: #000000;
+        color: #000;
         line-height: 1.5;
       }
+      .divider { width: 40px; height: 2px; background: var(--accent); margin: 4px 0 0; }
 
-      .divider {
-        width: 40px;
-        height: 2px;
-        background: var(--accent);
-        margin: 4px 0 0;
-      }
-
+      /* ── FORM ── */
       .form-body {
         padding: 32px 28px 40px;
         display: flex;
@@ -223,13 +108,7 @@
         gap: 24px;
         flex: 1;
       }
-
-      .field-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
+      .field-group { display: flex; flex-direction: column; gap: 8px; }
       label {
         font-size: 11px;
         font-weight: 500;
@@ -237,10 +116,7 @@
         text-transform: uppercase;
         color: white;
       }
-
-      input,
-      textarea,
-      select {
+      input, textarea, select {
         background: white;
         border: 1.5px solid var(--border);
         border-radius: 6px;
@@ -249,29 +125,16 @@
         font-size: 15px;
         color: var(--ink);
         outline: none;
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
         width: 100%;
-        color: black;
         appearance: none;
         -webkit-appearance: none;
       }
-
-      input:focus,
-      textarea:focus,
-      select:focus {
+      input:focus, textarea:focus, select:focus {
         border-color: var(--ink);
-        box-shadow: 0 0 0 3px rgba(13, 13, 13, 0.08);
-        color:rgb(12, 11, 11);
+        box-shadow: 0 0 0 3px rgba(13,13,13,0.08);
       }
-
-      textarea {
-        resize: none;
-        min-height: 130px;
-        line-height: 1.6;
-      }
-
+      textarea { resize: none; min-height: 130px; line-height: 1.6; }
       select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230d0d0d' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
@@ -279,250 +142,173 @@
         padding-right: 40px;
         cursor: pointer;
       }
-
-      .char-count {
-        font-size: 11px;
-        color: #f5f0e8;
-        text-align: right;
-        margin-top: -4px;
-      }
-      .char-count.warn {
-        color: #fff;
-      }
-
+      .char-count { font-size: 11px; color: #f5f0e8; text-align: right; margin-top: -4px; }
+      .char-count.warn { color: #fff; }
       .optional-tag {
-        font-size: 10px;
-        color: var(--paper);
-        font-style: italic;
-        margin-left: 6px;
-        letter-spacing: 0;
-        text-transform: none;
+        font-size: 10px; color: var(--paper);
+        font-style: italic; margin-left: 6px;
+        letter-spacing: 0; text-transform: none;
       }
-
       .helper-note {
-        font-size: 12px;
-        line-height: 1.5;
-        color: var(--paper);
-        background: rgba(13, 13, 13, 0.18);
-        border: 1px solid rgba(245, 240, 232, 0.18);
-        border-radius: 8px;
-        padding: 12px 14px;
+        font-size: 12px; line-height: 1.5; color: var(--paper);
+        background: rgba(13,13,13,0.18);
+        border: 1px solid rgba(245,240,232,0.18);
+        border-radius: 8px; padding: 12px 14px;
       }
-
-      .helper-note strong {
-        color: #fff;
-      }
+      .helper-note strong { color: #fff; }
 
       .btn-submit {
-        background: var(--ink);
-        color: var(--paper);
-        border: none;
-        border-radius: 6px;
+        background: var(--ink); color: var(--paper);
+        border: none; border-radius: 6px;
         padding: 18px 28px;
         font-family: "Syne", sans-serif;
-        font-size: 15px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        font-size: 15px; font-weight: 700;
+        letter-spacing: 1px; text-transform: uppercase;
         cursor: pointer;
-        transition:
-          background 0.2s,
-          transform 0.1s,
-          opacity 0.2s;
+        transition: background 0.2s, transform 0.1s, opacity 0.2s;
         width: 100%;
       }
-
-      .btn-submit:hover:not(:disabled) {
-        background: var(--muted);
-      }
-      .btn-submit:active:not(:disabled) {
-        transform: scale(0.98);
-      }
-      .btn-submit:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      .btn-arrow {
-        display: inline-block;
-        margin-left: 8px;
-        transition: transform 0.2s;
-      }
-      .btn-submit:hover .btn-arrow {
-        transform: translateX(4px);
-      }
-
-      .footer-note {
-        text-align: center;
-        font-size: 11px;
-        color: #f5f0e8;
-        padding: 0 28px 28px;
-      }
+      .btn-submit:hover:not(:disabled) { background: var(--muted); }
+      .btn-submit:active:not(:disabled) { transform: scale(0.98); }
+      .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+      .btn-arrow { display: inline-block; margin-left: 8px; transition: transform 0.2s; }
+      .btn-submit:hover .btn-arrow { transform: translateX(4px); }
+      .footer-note { text-align: center; font-size: 11px; color: #f5f0e8; padding: 0 28px 28px; }
 
       /* ── SUCCESS ── */
       #page-success {
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 48px 32px;
+        align-items: center; justify-content: center;
+        text-align: center; padding: 48px 32px;
         animation: fadeUp 0.5s ease both;
       }
-
       .success-icon {
-        width: 72px;
-        height: 72px;
-        background: var(--ink);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 72px; height: 72px;
+        background: var(--ink); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
         margin: 0 auto 24px;
-        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both;
       }
-
-      .success-icon svg {
-        width: 32px;
-        height: 32px;
-      }
-
-      #page-success h2 {
-        font-family: "Syne", sans-serif;
-        font-size: 28px;
-        font-weight: 800;
-        margin-bottom: 12px;
-      }
-
-      #page-success p {
-        color: var(--paper);
-        font-size: 15px;
-        line-height: 1.6;
-        max-width: 280px;
-        margin: 0 auto 32px;
-      }
-
+      .success-icon svg { width: 32px; height: 32px; }
+      #page-success h2 { font-family: "Syne", sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+      #page-success p { color: var(--paper); font-size: 15px; line-height: 1.6; max-width: 280px; margin: 0 auto 32px; }
       .btn-back {
-        background: transparent;
-        border: 1.5px solid var(--border);
-        border-radius: 6px;
-        padding: 14px 28px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        color: var(--ink);
-        transition:
-          border-color 0.2s,
-          background 0.2s;
+        background: transparent; border: 1.5px solid var(--border);
+        border-radius: 6px; padding: 14px 28px;
+        font-family: "DM Sans", sans-serif; font-size: 14px; font-weight: 500;
+        cursor: pointer; color: var(--paper);
+        transition: border-color 0.2s, background 0.2s;
       }
+      .btn-back:hover { border-color: var(--paper); background: rgba(255,255,255,0.1); }
 
-      .btn-back:hover {
-        border-color: var(--ink);
-        background: white;
+      /* ── REVIEW PAGE ── */
+      #page-review {
+        align-items: center; justify-content: center;
+        padding: 40px 28px; animation: fadeUp 0.5s ease both;
+      }
+      .review-box {
+        background: white; border-radius: 12px;
+        padding: 28px 24px; width: 100%; max-width: 500px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      }
+      .review-box h2 {
+        font-family: "Syne", sans-serif; font-size: 20px;
+        font-weight: 800; margin-bottom: 6px; color: var(--ink);
+      }
+      .review-original {
+        background: var(--paper); border-radius: 6px;
+        padding: 12px 14px; margin: 14px 0;
+        font-size: 13px; line-height: 1.6; color: var(--ink);
+      }
+      .review-original .orig-label {
+        font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+        text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+      }
+      .review-resolution {
+        background: #f0faf0; border: 1px solid #c3e6c3;
+        border-radius: 6px; padding: 12px 14px; margin-bottom: 14px;
+        font-size: 13px; line-height: 1.6; color: var(--ink);
+      }
+      .review-resolution .orig-label { color: var(--accent); }
+      .star-row { display: flex; gap: 8px; margin: 8px 0 16px; }
+      .star {
+        font-size: 28px; cursor: pointer;
+        color: #ddd; transition: color 0.15s;
+        user-select: none;
+      }
+      .star.active { color: #f59e0b; }
+      .review-box label { color: var(--ink); }
+      .review-box textarea {
+        min-height: 90px; font-size: 14px;
+        border-color: #ddd; margin-top: 4px;
       }
 
       /* ── ADMIN LOGIN ── */
       #page-adminlogin {
-        align-items: center;
-        justify-content: center;
-        padding: 48px 32px;
-        animation: fadeUp 0.4s ease both;
+        align-items: center; justify-content: center;
+        padding: 48px 32px; animation: fadeUp 0.4s ease both;
       }
-
       #page-adminlogin h2 {
-        font-family: "Syne", sans-serif;
-        font-size: 22px;
-        color: #fff;
-        font-weight: 800;
-        margin-bottom: 6px;
-        text-align: center;
+        font-family: "Syne", sans-serif; font-size: 22px;
+        color: #fff; font-weight: 800; margin-bottom: 6px; text-align: center;
       }
-
-      #page-adminlogin p {
-        color: #fff;
-        font-size: 13px;
-        text-align: center;
-        margin-bottom: 28px;
-      }
-
-      #page-adminlogin .field-group {
-        width: 100%;
-        max-width: 320px;
-      }
-
-      .error-msg {
-        color: var(--accent);
-        font-size: 12px;
-        text-align: center;
-        margin-top: 8px;
-        height: 16px;
-      }
+      #page-adminlogin p { color: #fff; font-size: 13px; text-align: center; margin-bottom: 28px; }
+      #page-adminlogin .field-group { width: 100%; max-width: 320px; }
+      .error-msg { color: #ff6b6b; font-size: 12px; text-align: center; margin-top: 8px; height: 16px; }
 
       /* ── ADMIN PANEL ── */
-     #page-admin { flex-direction: column; animation: fadeUp 0.4s ease both; background: var(--paper); }
+      #page-admin { flex-direction: column; animation: fadeUp 0.4s ease both; background: var(--paper); }
+      #page-manage-admins { flex-direction: column; animation: fadeUp 0.4s ease both; background: var(--paper); }
 
       .admin-header {
-        background: var(--ink);
-        color: var(--paper);
-        padding: 24px 28px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        background: var(--ink); color: var(--paper);
+        padding: 18px 28px;
+        display: flex; justify-content: space-between; align-items: center;
+        gap: 12px; flex-wrap: wrap;
       }
-
-      .admin-header h2 {
-        font-family: "Syne", sans-serif;
-        font-size: 18px;
-        font-weight: 800;
-      }
+      .admin-header-left { display: flex; flex-direction: column; gap: 2px; }
+      .admin-header h2 { font-family: "Syne", sans-serif; font-size: 18px; font-weight: 800; }
+      .admin-welcome { font-size: 11px; color: #aaa; letter-spacing: 0.5px; }
+      .admin-header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
       .count-badge {
-        background: var(--accent);
-        color: #fff;
-        font-size: 11px;
-        font-weight: 700;
-        padding: 4px 10px;
-        border-radius: 20px;
-        letter-spacing: 0.5px;
+        background: var(--accent); color: #fff;
+        font-size: 11px; font-weight: 700;
+        padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px;
       }
+
+      .btn-header {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 6px; padding: 7px 14px;
+        font-size: 12px; color: #fff; cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: background 0.2s;
+      }
+      .btn-header:hover { background: rgba(255,255,255,0.2); }
+      .btn-header.danger { border-color: rgba(202,10,10,0.4); color: #ff8888; }
+      .btn-header.danger:hover { background: rgba(202,10,10,0.2); }
 
       .admin-filters {
-    padding: 16px 20px 0;
-    display: flex; gap: 8px; flex-wrap: wrap;
-    background: var(--paper);
-  }
-
+        padding: 14px 20px 0;
+        display: flex; gap: 8px; flex-wrap: wrap;
+        background: var(--paper);
+      }
       .filter-btn {
-        background: white;
-        border: 1.5px solid var(--border);
-        border-radius: 20px;
-        padding: 6px 14px;
-        font-size: 11px;
-        font-weight: 500;
-        cursor: pointer;
-        color: var(--ink);
-        transition: all 0.15s;
+        background: white; border: 1.5px solid var(--border);
+        border-radius: 20px; padding: 6px 14px;
+        font-size: 11px; font-weight: 500; cursor: pointer;
+        color: var(--ink); transition: all 0.15s;
         font-family: "DM Sans", sans-serif;
       }
-
-      .filter-btn.active,
-      .filter-btn:hover {
-        background: var(--ink);
-        color: var(--paper);
-        border-color: var(--ink);
+      .filter-btn.active, .filter-btn:hover {
+        background: var(--ink); color: var(--paper); border-color: var(--ink);
       }
 
       .admin-body { padding: 16px 20px 40px; flex: 1; background: var(--paper); }
-     
 
-      .loading-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--muted);
-      }
-
+      .loading-state { text-align: center; padding: 60px 20px; color: var(--muted); }
       .spinner {
-        width: 28px;
-        height: 28px;
+        width: 28px; height: 28px;
         border: 2px solid var(--border);
         border-top-color: var(--ink);
         border-radius: 50%;
@@ -530,236 +316,200 @@
         margin: 0 auto 16px;
       }
 
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
       .entry-card {
-        background: white;
-        border: 1.5px solid var(--border);
-        border-radius: 8px;
-        padding: 16px 18px;
-        margin-bottom: 12px;
+        background: white; border: 1.5px solid #e0dbd4;
+        border-radius: 8px; padding: 16px 18px; margin-bottom: 12px;
         animation: fadeUp 0.3s ease both;
       }
+      .entry-card.status-open { border-left: 4px solid var(--status-open); }
+      .entry-card.status-in_progress { border-left: 4px solid var(--status-progress); }
+      .entry-card.status-resolved { border-left: 4px solid var(--status-resolved); opacity: 0.85; }
 
-      .entry-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-
+      .entry-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+      .entry-meta-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
       .entry-category {
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        background: var(--ink);
-        color: var(--paper);
-        padding: 3px 8px;
-        border-radius: 3px;
+        font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+        text-transform: uppercase; background: var(--ink);
+        color: var(--paper); padding: 3px 8px; border-radius: 3px;
+      }
+      .status-badge {
+        font-size: 10px; font-weight: 700; letter-spacing: 1px;
+        text-transform: uppercase; padding: 3px 8px; border-radius: 3px;
+        color: white;
+      }
+      .status-badge.open { background: var(--status-open); }
+      .status-badge.in_progress { background: var(--status-progress); }
+      .status-badge.resolved { background: var(--status-resolved); }
+
+      .entry-date { font-size: 11px; color: var(--muted); }
+      .entry-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+      .entry-contact { font-size: 12px; line-height: 1.6; color: var(--muted); margin-bottom: 8px; }
+      .entry-msg { font-size: 14px; line-height: 1.6; color: var(--ink); margin-bottom: 12px; }
+
+      .entry-assigned {
+        font-size: 11px; color: var(--muted);
+        margin-bottom: 10px; font-style: italic;
       }
 
-      .entry-date {
-        font-size: 11px;
-        color: var(--muted);
+      .entry-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0ece6; }
+      .btn-card {
+        font-size: 12px; font-weight: 500;
+        border-radius: 5px; padding: 7px 13px;
+        cursor: pointer; border: 1.5px solid #ddd;
+        background: white; color: var(--ink);
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.15s;
       }
-      .entry-name {
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--muted);
-        margin-bottom: 6px;
-      }
+      .btn-card:hover { border-color: var(--ink); }
+      .btn-card.primary { background: var(--ink); color: white; border-color: var(--ink); }
+      .btn-card.primary:hover { background: #333; }
+      .btn-card.success { background: var(--accent); color: white; border-color: var(--accent); }
+      .btn-card.success:hover { background: #0e4d12; }
+      .btn-card.whatsapp { background: #25d366; color: white; border-color: #25d366; }
+      .btn-card.whatsapp:hover { background: #1da851; }
 
-      .entry-contact {
-        font-size: 12px;
-        line-height: 1.5;
-        color: var(--muted);
-        margin-bottom: 8px;
-      }
-
-      .entry-msg {
-        font-size: 14px;
-        line-height: 1.6;
+      .note-area {
+        width: 100%; margin-top: 10px;
+        padding: 10px 12px; font-size: 13px;
+        border: 1.5px solid #ddd; border-radius: 6px;
+        font-family: "DM Sans", sans-serif;
+        resize: none; min-height: 70px;
         color: var(--ink);
       }
+      .note-area:focus { border-color: var(--accent); outline: none; }
 
-      .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--muted);
+      .resolved-note {
+        background: #f0faf0; border: 1px solid #c3e6c3;
+        border-radius: 6px; padding: 10px 12px;
+        font-size: 13px; line-height: 1.5; color: #0e4d12;
+        margin-top: 8px;
       }
-      .empty-state svg {
-        margin-bottom: 16px;
-        opacity: 0.3;
+      .resolved-note .note-label {
+        font-size: 10px; font-weight: 700; letter-spacing: 1px;
+        text-transform: uppercase; color: var(--accent); margin-bottom: 4px;
       }
-      .empty-state p {
-        font-size: 14px;
-      }
+      .resolved-by { font-size: 11px; color: var(--muted); margin-top: 6px; font-style: italic; }
+
+      .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+      .empty-state svg { margin-bottom: 16px; opacity: 0.3; }
+      .empty-state p { font-size: 14px; }
 
       .admin-actions {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        padding: 0 20px 8px;
-        flex-wrap: wrap;
+        display: flex; gap: 10px; justify-content: center;
+        padding: 0 20px 8px; flex-wrap: wrap;
       }
-
       .btn-secondary {
-        background: transparent;
-        border: 1.5px solid var(--border);
-        border-radius: 6px;
-        padding: 10px 18px;
-        font-size: 12px;
-        cursor: pointer;
-        color: var(--ink);
-        transition: all 0.2s;
-        font-family: "DM Sans", sans-serif;
+        background: transparent; border: 1.5px solid var(--border);
+        border-radius: 6px; padding: 10px 18px;
+        font-size: 12px; cursor: pointer; color: var(--ink);
+        transition: all 0.2s; font-family: "DM Sans", sans-serif;
       }
-
-      .btn-secondary:hover {
-        border-color: var(--muted);
-        color: var(--ink);
-      }
-      .btn-secondary.danger {
-        color: #c0392b;
-      }
-      .btn-secondary.danger:hover {
-        border-color: #c0392b;
-        background: #fff5f5;
-      }
+      .btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
+      .btn-secondary.danger { color: #c0392b; }
+      .btn-secondary.danger:hover { border-color: #c0392b; background: #fff5f5; }
 
       .btn-exit-admin {
-        display: block;
-        margin: 12px auto 0;
-        background: transparent;
-        border: none;
-        font-size: 12px;
-        color: var(--paper);
-        cursor: pointer;
-        text-decoration: underline;
+        display: block; margin: 12px auto 24px;
+        background: transparent; border: none;
+        font-size: 12px; color: var(--muted);
+        cursor: pointer; text-decoration: underline;
         font-family: "DM Sans", sans-serif;
       }
 
-      .admin-trigger {
-        position: fixed;
-        bottom: 18px;
-        right: 18px;
-        background: rgba(13, 13, 13, 0.18);
-        border: 1px solid rgba(245, 240, 232, 0.5);
-        border-radius: 50%;
-        width: 42px;
-        height: 42px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.2s;
-        z-index: 100;
+      /* ── MANAGE ADMINS ── */
+      .manage-body { padding: 24px 20px 40px; flex: 1; background: var(--paper); }
+      .section-title {
+        font-family: "Syne", sans-serif; font-size: 15px; font-weight: 800;
+        margin-bottom: 14px; color: var(--ink);
       }
-
-      .admin-trigger:hover {
-        background: rgba(13, 13, 13, 0.28);
-      }
-
-      .admin-trigger svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      .toast {
-        position: fixed;
-        bottom: 64px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--ink);
-        color: var(--paper);
-        padding: 10px 20px;
-        border-radius: 6px;
+      .admin-table {
+        width: 100%; border-collapse: collapse;
+        background: white; border-radius: 8px;
+        overflow: hidden; margin-bottom: 28px;
         font-size: 13px;
-        font-weight: 500;
-        opacity: 0;
-        transition: opacity 0.3s;
-        pointer-events: none;
-        z-index: 200;
+      }
+      .admin-table th {
+        background: var(--ink); color: var(--paper);
+        padding: 10px 14px; text-align: left;
+        font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+      }
+      .admin-table td { padding: 12px 14px; border-bottom: 1px solid #f0ece6; color: var(--ink); }
+      .admin-table tr:last-child td { border-bottom: none; }
+      .role-badge {
+        font-size: 10px; font-weight: 700; letter-spacing: 1px;
+        text-transform: uppercase; padding: 2px 7px; border-radius: 3px;
+      }
+      .role-badge.super_admin { background: var(--ink); color: white; }
+      .role-badge.admin { background: #e8e3dc; color: var(--ink); }
+
+      .create-admin-form {
+        background: white; border-radius: 8px;
+        padding: 20px; display: flex; flex-direction: column;
+        gap: 14px; max-width: 460px;
+      }
+      .create-admin-form label { color: var(--ink); }
+      .create-admin-form input, .create-admin-form select { font-size: 14px; }
+      .form-row { display: flex; gap: 12px; }
+      .form-row .field-group { flex: 1; }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed; bottom: 64px; left: 50%;
+        transform: translateX(-50%);
+        background: var(--ink); color: var(--paper);
+        padding: 10px 20px; border-radius: 6px;
+        font-size: 13px; font-weight: 500;
+        opacity: 0; transition: opacity 0.3s;
+        pointer-events: none; z-index: 200;
         white-space: nowrap;
       }
-
-      .toast.show {
-        opacity: 1;
-      }
-
-      /* Global container and accessibility tweaks */
-      .header-band,
-      .form-body,
-      .admin-body {
-        width: min(1100px, 96%);
-        margin: 0 auto;
-      }
-
-      .brand img {
-        max-width: 100%;
-        height: auto;
-        display: block;
-      }
-
-      .entry-card {
-        word-wrap: break-word;
-        white-space: normal;
-      }
+      .toast.show { opacity: 1; }
 
       .admin-trigger {
-        right: 14px;
-        bottom: 14px;
+        position: fixed; bottom: 14px; right: 14px;
+        background: rgba(13,13,13,0.18);
+        border: 1px solid rgba(245,240,232,0.5);
+        border-radius: 50%; width: 42px; height: 42px;
+        cursor: pointer; display: flex; align-items: center;
+        justify-content: center; transition: background 0.2s; z-index: 100;
+      }
+      .admin-trigger:hover { background: rgba(13,13,13,0.28); }
+      .admin-trigger circle, .admin-trigger path { stroke: #f5f0e8; }
+
+      .header-band, .form-body, .admin-body, .manage-body { width: min(1100px, 96%); margin: 0 auto; }
+      .admin-header { width: 100%; }
+      .admin-filters { width: 100%; }
+      .admin-actions { width: 100%; }
+
+      input:focus-visible, textarea:focus-visible, select:focus-visible {
+        outline: 3px solid rgba(21,104,25,0.12); outline-offset: 2px;
       }
 
-      .admin-trigger circle,
-      .admin-trigger path {
-        stroke: #f5f0e8;
-      }
-
-      input:focus-visible,
-      textarea:focus-visible,
-      select:focus-visible {
-        outline: 3px solid rgba(21, 104, 25, 0.12);
-        outline-offset: 2px;
+      @media (max-width: 760px) {
+        .header-band { flex-direction: column; align-items: flex-start; padding: 20px 18px; }
+        .display { margin-left: 0; margin-top: 6px; }
+        .form-body { padding: 20px 18px 28px; }
+        textarea { min-height: 110px; }
+        .form-row { flex-direction: column; }
+        .admin-table { font-size: 12px; }
       }
     </style>
   </head>
   <body>
-    <!-- FORM -->
-    <div
-      class="page active"
-      id="page-form"
-      style="animation: fadeUp 0.5s ease both"
-    >
+
+    <!-- ── FORM PAGE ── -->
+    <div class="page active" id="page-form" style="animation: fadeUp 0.5s ease both">
       <div class="header-band">
         <div class="brand">
-          <img
-            src="/images_2-removebg-preview.png"
-            style="
-              height: 80px;
-              width: 80px;
-              object-fit: contain;
-              vertical-align: middle;
-              /* margin-right: 5px; */
-            "
-          />
-          <span style="vertical-align: middle">Trolleys Superstore</span>
+          <img src="/images_2-removebg-preview.png" style="height:80px;width:80px;object-fit:contain;vertical-align:middle;" />
+          <span style="vertical-align:middle">Trolleys Superstore</span>
         </div>
         <div class="display">
           <h1>Tell us what<br />you <span>think.</span></h1>
           <div class="divider"></div>
-          <p class="header-subtitle">
-            Your feedback shapes how we serve you.<br />Every message is read by
-            our team.
-          </p>
+          <p class="header-subtitle">Your feedback shapes how we serve you.<br />Every message is read by our team.</p>
         </div>
       </div>
-
       <div class="form-body">
         <div class="field-group">
           <label>Category</label>
@@ -773,152 +523,183 @@
             <option value="Other">Other</option>
           </select>
         </div>
-
         <div class="field-group">
-          <label
-            >Your Message <span style="color: var(--accent)">*</span></label
-          >
-          <textarea
-            id="message"
-            placeholder="Describe your experience or share your idea…"
-            maxlength="600"
-            oninput="updateCount()"
-          ></textarea>
+          <label>Your Message <span style="color:var(--accent)">*</span></label>
+          <textarea id="message" placeholder="Describe your experience or share your idea…" maxlength="600" oninput="updateCount()"></textarea>
           <div class="char-count" id="charCount">0 / 600</div>
         </div>
-
         <div class="field-group">
           <label>Your Name <span class="optional-tag">optional</span></label>
-          <input
-            type="text"
-            id="name"
-            placeholder="e.g. John Doe."
-            maxlength="60"
-          />
+          <input type="text" id="name" placeholder="e.g. John Doe." maxlength="60" />
         </div>
-
         <div class="field-group">
           <label>Email <span class="optional-tag">optional</span></label>
-          <input
-            type="email"
-            id="email"
-            placeholder="e.g. john@example.com"
-            maxlength="120"
-            autocomplete="email"
-          />
+          <input type="email" id="email" placeholder="e.g. john@example.com" maxlength="120" autocomplete="email" />
         </div>
-
         <div class="field-group">
           <label>Phone Number <span class="optional-tag">optional</span></label>
-          <input
-            type="tel"
-            id="phone"
-            placeholder="e.g. +234 800 000 0000"
-            maxlength="30"
-            autocomplete="tel"
-          />
+          <input type="tel" id="phone" placeholder="e.g. +234 800 000 0000" maxlength="30" autocomplete="tel" />
         </div>
-
         <p class="helper-note">
-          <strong>Disclaimer:</strong> your details are collected for records
-          purposes only. If available, we may also use them to share promotions
-          or special offers. Please provide at least an email address or phone
-          number.
+          <strong>Disclaimer:</strong> your details are collected for records purposes only. If available, we may also use them to share promotions or special offers. Please provide at least an email address or phone number.
         </p>
-
         <button class="btn-submit" id="submit-btn" onclick="submitForm()">
           Send Feedback <span class="btn-arrow">→</span>
         </button>
       </div>
-      <p class="footer-note">
-        Your feedback is confidential and used only to improve our services.
-      </p>
+      <p class="footer-note">Your feedback is confidential and used only to improve our services.</p>
     </div>
 
-    <!-- SUCCESS -->
+    <!-- ── SUCCESS PAGE ── -->
     <div class="page" id="page-success">
       <div class="success-icon">
         <svg viewBox="0 0 32 32" fill="none">
-          <path
-            d="M6 16l8 8 12-14"
-            stroke="#f5f0e8"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+          <path d="M6 16l8 8 12-14" stroke="#f5f0e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-      <h2>Message Received.</h2>
-      <p>
-        We appreciate you taking the time. Your feedback will help us do better.
-      </p>
-      <button class="btn-back" onclick="showPage('page-form')">
-        Submit Another
-      </button>
+      <h2 style="color:white;font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:12px;">Message Received.</h2>
+      <p>We appreciate you taking the time. Your feedback will help us do better.</p>
+      <button class="btn-back" onclick="showPage('page-form')">Submit Another</button>
     </div>
 
-    <!-- ADMIN LOGIN -->
+    <!-- ── REVIEW PAGE ── -->
+    <div class="page" id="page-review">
+      <div class="review-box">
+        <h2>How did we do?</h2>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:4px;">Your issue has been resolved. We'd love your feedback.</p>
+        <div class="review-original" id="review-original-box">
+          <div class="orig-label">Your original message</div>
+          <div id="review-original-text"></div>
+        </div>
+        <div class="review-resolution" id="review-resolution-box" style="display:none">
+          <div class="orig-label">How we resolved it</div>
+          <div id="review-resolution-text"></div>
+        </div>
+        <div class="field-group" style="margin-top:12px;">
+          <label style="color:var(--ink)">Rating <span style="color:var(--border)">*</span></label>
+          <div class="star-row" id="star-row">
+            <span class="star" data-v="1" onclick="setRating(1)">★</span>
+            <span class="star" data-v="2" onclick="setRating(2)">★</span>
+            <span class="star" data-v="3" onclick="setRating(3)">★</span>
+            <span class="star" data-v="4" onclick="setRating(4)">★</span>
+            <span class="star" data-v="5" onclick="setRating(5)">★</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <label style="color:var(--ink)">Comments <span class="optional-tag" style="color:var(--muted)">optional</span></label>
+          <textarea id="review-comment" placeholder="Anything else you'd like to share…" style="min-height:80px;border-color:#ddd;font-size:14px;color:var(--ink);"></textarea>
+        </div>
+        <button class="btn-submit" style="margin-top:14px;" id="review-submit-btn" onclick="submitReview()">
+          Submit Review <span class="btn-arrow">→</span>
+        </button>
+        <div class="error-msg" id="review-error" style="color:var(--border);margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- ── REVIEW DONE PAGE ── -->
+    <div class="page" id="page-review-done">
+      <div style="text-align:center;padding:60px 32px;">
+        <div class="success-icon" style="background:var(--accent);">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M6 16l8 8 12-14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h2 style="color:white;font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px;">Thank you!</h2>
+        <p style="color:var(--paper);font-size:14px;line-height:1.6;max-width:260px;margin:0 auto;">Your review means a lot to us and helps us keep improving.</p>
+      </div>
+    </div>
+
+    <!-- ── ADMIN LOGIN ── -->
     <div class="page" id="page-adminlogin">
       <h2>Admin Access</h2>
-      <p>Enter the admin password to view submissions.</p>
-      <div class="field-group">
+      <p>Sign in with your admin credentials.</p>
+      <div class="field-group" style="width:100%;max-width:320px;">
+        <label>Email</label>
+        <input type="email" id="admin-email" placeholder="admin@trolleys.com" autocomplete="email" onkeydown="if(event.key==='Enter')adminLogin();" />
+      </div>
+      <br />
+      <div class="field-group" style="width:100%;max-width:320px;">
         <label>Password</label>
-        <input
-          type="password"
-          id="admin-pw"
-          placeholder="••••••••"
-          onkeydown="if (event.key === 'Enter') checkAdmin();"
-        />
+        <input type="password" id="admin-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin();" />
         <div class="error-msg" id="pw-error"></div>
       </div>
       <br />
-      <button
-        class="btn-submit"
-        onclick="checkAdmin()"
-        style="max-width: 320px"
-      >
-        Enter →
-      </button>
-      <button class="btn-exit-admin" onclick="showPage('page-form')">
-        ← Back to form
-      </button>
+      <button class="btn-submit" onclick="adminLogin()" style="max-width:320px">Sign In →</button>
+      <button class="btn-exit-admin" onclick="showPage('page-form')">← Back to form</button>
     </div>
 
-    <!-- ADMIN PANEL -->
+    <!-- ── ADMIN PANEL ── -->
     <div class="page" id="page-admin">
       <div class="admin-header">
-        <h2>Submissions</h2>
-        <span class="count-badge" id="admin-count">—</span>
+        <div class="admin-header-left">
+          <h2>Submissions</h2>
+          <div class="admin-welcome" id="admin-welcome-text"></div>
+        </div>
+        <div class="admin-header-right">
+          <span class="count-badge" id="admin-count">—</span>
+          <button class="btn-header" id="btn-manage-admins" onclick="showManageAdmins()" style="display:none">Manage Admins</button>
+          <button class="btn-header danger" onclick="adminLogout()">Sign Out</button>
+        </div>
       </div>
       <div class="admin-filters" id="admin-filters"></div>
       <div class="admin-body" id="admin-list">
-        <div class="loading-state">
-          <div class="spinner"></div>
-          <p>Loading submissions…</p>
-        </div>
+        <div class="loading-state"><div class="spinner"></div><p>Loading submissions…</p></div>
       </div>
       <div class="admin-actions">
         <button class="btn-secondary" onclick="loadAdmin()">↻ Refresh</button>
       </div>
-      <button class="btn-exit-admin" onclick="showPage('page-form')">
-        ← Back to form
-      </button>
+      <button class="btn-exit-admin" onclick="adminLogout()">← Sign Out</button>
+    </div>
+
+    <!-- ── MANAGE ADMINS PAGE ── -->
+    <div class="page" id="page-manage-admins">
+      <div class="admin-header">
+        <div class="admin-header-left">
+          <h2>Manage Admins</h2>
+          <div class="admin-welcome" id="manage-welcome-text"></div>
+        </div>
+        <div class="admin-header-right">
+          <button class="btn-header" onclick="showPage('page-admin');loadAdmin();">← Back to Submissions</button>
+          <button class="btn-header danger" onclick="adminLogout()">Sign Out</button>
+        </div>
+      </div>
+      <div class="manage-body">
+        <div class="section-title">All Admins</div>
+        <div id="admins-table-container">
+          <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+        </div>
+        <div class="section-title" style="margin-top:28px;">Create New Admin</div>
+        <div class="create-admin-form">
+          <div class="form-row">
+            <div class="field-group">
+              <label style="color:var(--ink)">Full Name</label>
+              <input type="text" id="new-admin-name" placeholder="e.g. Tunde Adeyemi" />
+            </div>
+            <div class="field-group">
+              <label style="color:var(--ink)">Role</label>
+              <select id="new-admin-role">
+                <option value="admin">Admin</option>
+                <option value="super_admin">Super Admin</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label style="color:var(--ink)">Email</label>
+            <input type="email" id="new-admin-email" placeholder="email@trolleys.com" />
+          </div>
+          <div class="field-group">
+            <label style="color:var(--ink)">Temporary Password</label>
+            <input type="password" id="new-admin-pass" placeholder="Min. 6 characters" />
+          </div>
+          <div class="error-msg" id="create-admin-error" style="height:auto;text-align:left;color:var(--border);"></div>
+          <button class="btn-submit" onclick="createAdmin()" style="margin-top:4px;">Create Admin →</button>
+        </div>
+      </div>
     </div>
 
     <!-- Admin trigger -->
-    <button
-      class="admin-trigger"
-      onclick="showPage('page-adminlogin')"
-      title="Admin"
-    >
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <circle cx="7" cy="4" r="2.5" stroke="#8a8070" stroke-width="1.3" />
-        <path
-          d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5"
-          stroke="#8a8070"
-          stroke-width="1.3"
-          stroke-linecap="round"
-        />
+    <button class="admin-trigger" onclick="showPage('page-adminlogin')" title="Admin Login">
+      <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="4" r="2.5" stroke="#8a8070" stroke-width="1.3"/>
+        <path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#8a8070" stroke-width="1.3" stroke-linecap="round"/>
       </svg>
     </button>
 
@@ -927,60 +708,81 @@
     <script>
       // ── CONFIG ──
       const SUPABASE_URL = "https://bzwwtycpesttxqufzknp.supabase.co";
-      const SUPABASE_KEY =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6d3d0eWNwZXN0dHhxdWZ6a25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI5MzcsImV4cCI6MjA5NjA2ODkzN30.m8z0qshLraeDNjfBcWH2CPSbzfcg3cD4sZcNVlo3j3M";
-      const ADMIN_PASSWORD = "trolleys2024"; // ← CHANGE THIS before going live
+      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6d3d0eWNwZXN0dHhxdWZ6a25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI5MzcsImV4cCI6MjA5NjA2ODkzN30.m8z0qshLraeDNjfBcWH2CPSbzfcg3cD4sZcNVlo3j3M";
       const TABLE = "suggestions";
 
-      // ── SUPABASE HELPERS ──
-      async function sbInsert(row) {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
-          method: "POST",
-          headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
-          body: JSON.stringify(row),
-        });
-        if (!res.ok) throw new Error(await res.text());
+      // ── SESSION ──
+      let currentAdmin = null;
+
+      function saveSession(admin) {
+        currentAdmin = admin;
+        sessionStorage.setItem("trolleys_admin", JSON.stringify(admin));
       }
 
-      async function sbFetch(categoryFilter, sortOrder = "desc") {
-        let url = `${SUPABASE_URL}/rest/v1/${TABLE}?order=created_at.${sortOrder}`;
-        if (categoryFilter && categoryFilter !== "All") {
-          url += `&category=eq.${encodeURIComponent(categoryFilter)}`;
-        }
-        const res = await fetch(url, {
-          headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-          },
+      function loadSession() {
+        const s = sessionStorage.getItem("trolleys_admin");
+        if (s) { currentAdmin = JSON.parse(s); return true; }
+        return false;
+      }
+
+      function clearSession() {
+        currentAdmin = null;
+        sessionStorage.removeItem("trolleys_admin");
+      }
+
+      // ── SHA-256 ──
+      async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+
+      // ── SUPABASE HELPERS ──
+      async function sbGet(table, query = "") {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
         });
         if (!res.ok) throw new Error(await res.text());
         return res.json();
       }
 
-      async function sbDelete() {
-        const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/${TABLE}?id=neq.00000000-0000-0000-0000-000000000000`,
-          {
-            method: "DELETE",
-            headers: {
-              apikey: SUPABASE_KEY,
-              Authorization: `Bearer ${SUPABASE_KEY}`,
-            },
+      async function sbPost(table, row) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+          method: "POST",
+          headers: {
+            apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+            "Content-Type": "application/json", Prefer: "return=representation"
           },
-        );
+          body: JSON.stringify(row)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        return res.json();
+      }
+
+      async function sbPatch(table, id, updates) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+          method: "PATCH",
+          headers: {
+            apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+            "Content-Type": "application/json", Prefer: "return=minimal"
+          },
+          body: JSON.stringify(updates)
+        });
+        if (!res.ok) throw new Error(await res.text());
+      }
+
+      async function sbDelete(table, id) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+          method: "DELETE",
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+        });
         if (!res.ok) throw new Error(await res.text());
       }
 
       // ── UI HELPERS ──
       function showPage(id) {
-        document
-          .querySelectorAll(".page")
-          .forEach((p) => p.classList.remove("active"));
+        document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
         document.getElementById(id).classList.add("active");
         window.scrollTo(0, 0);
       }
@@ -989,7 +791,7 @@
         const t = document.getElementById("toast");
         t.textContent = msg;
         t.classList.add("show");
-        setTimeout(() => t.classList.remove("show"), 2500);
+        setTimeout(() => t.classList.remove("show"), 2800);
       }
 
       function updateCount() {
@@ -1000,55 +802,38 @@
       }
 
       function formatDate(iso) {
-        return new Date(iso).toLocaleString("en-NG", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        });
+        return new Date(iso).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" });
+      }
+
+      function esc(str) {
+        return String(str || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
       }
 
       // ── FORM SUBMIT ──
       async function submitForm() {
-        const cat = document.getElementById("category").value;
-        const msg = document.getElementById("message").value.trim();
-        const name = document.getElementById("name").value.trim();
+        const cat   = document.getElementById("category").value;
+        const msg   = document.getElementById("message").value.trim();
+        const name  = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
         const phone = document.getElementById("phone").value.trim();
 
-        if (!cat) {
-          showToast("Please select a category.");
-          return;
-        }
-        if (!msg || msg.length < 5) {
-          showToast("Please write your message.");
-          return;
-        }
-        if (!email && !phone) {
-          showToast("Please provide at least an email address or phone number.");
-          return;
-        }
+        if (!cat)  { showToast("Please select a category."); return; }
+        if (!msg || msg.length < 5) { showToast("Please write your message."); return; }
+        if (!email && !phone) { showToast("Please provide at least an email or phone number."); return; }
 
         const btn = document.getElementById("submit-btn");
-        btn.disabled = true;
-        btn.textContent = "Sending…";
+        btn.disabled = true; btn.textContent = "Sending…";
 
         try {
-          await sbInsert({
-            category: cat,
-            message: msg,
-            name: name || "Anonymous",
-            email: email || null,
-            phone: phone || null,
-          });
-
+          await sbPost(TABLE, { category: cat, message: msg, name: name || "Anonymous", email: email || null, phone: phone || null, status: "open" });
           document.getElementById("category").value = "";
           document.getElementById("message").value = "";
           document.getElementById("name").value = "";
           document.getElementById("email").value = "";
           document.getElementById("phone").value = "";
           updateCount();
-
           showPage("page-success");
-        } catch (err) {
+        } catch(err) {
           showToast("Failed to send. Please try again.");
           console.error(err);
         } finally {
@@ -1057,88 +842,315 @@
         }
       }
 
-      // ── ADMIN ──
-      let activeFilter = "All";
-      let activeSort = "desc";
+      // ── ADMIN LOGIN ──
+      async function adminLogin() {
+        const email = document.getElementById("admin-email").value.trim().toLowerCase();
+        const pw    = document.getElementById("admin-pw").value;
+        const errEl = document.getElementById("pw-error");
+        errEl.textContent = "";
 
-      function checkAdmin() {
-        const pw = document.getElementById("admin-pw").value;
-        if (pw === ADMIN_PASSWORD) {
-          document.getElementById("admin-pw").value = "";
-          document.getElementById("pw-error").textContent = "";
-          showPage("page-admin");
-          loadAdmin();
-        } else {
-          document.getElementById("pw-error").textContent =
-            "Incorrect password.";
-        }
-      }
-
-      async function loadAdmin(filter, sortOrder) {
-        if (filter !== undefined) activeFilter = filter;
-        if (sortOrder !== undefined) activeSort = sortOrder;
-
-        const list = document.getElementById("admin-list");
-        list.innerHTML =
-          '<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>';
+        if (!email || !pw) { errEl.textContent = "Enter both email and password."; return; }
 
         try {
-          const data = await sbFetch(activeFilter, activeSort);
-
-          // Build filter buttons from unique categories
-          const allData = await sbFetch("All", activeSort);
-          const cats = ["All", ...new Set(allData.map((e) => e.category))];
-          const filtersEl = document.getElementById("admin-filters");
-          filtersEl.innerHTML = cats
-            .map(
-              (c) =>
-                `<button class="filter-btn ${c === activeFilter ? "active" : ""}" onclick="loadAdmin('${c}')">${c} ${c === "All" ? `(${allData.length})` : `(${allData.filter((e) => e.category === c).length})`}</button>`,
-            )
-            .join("") +
-            `
-              <button class="filter-btn ${activeSort === "desc" ? "active" : ""}" onclick="loadAdmin(undefined, 'desc')">Newest first</button>
-              <button class="filter-btn ${activeSort === "asc" ? "active" : ""}" onclick="loadAdmin(undefined, 'asc')">Oldest first</button>
-            `;
-
-          document.getElementById("admin-count").textContent = data.length;
-
-          if (data.length === 0) {
-            list.innerHTML = `
-          <div class="empty-state">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <rect x="8" y="12" width="32" height="28" rx="3" stroke="#8a8070" stroke-width="2"/>
-              <path d="M16 22h16M16 30h10" stroke="#8a8070" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <p>No submissions yet.</p>
-          </div>`;
-            return;
-          }
-
-          list.innerHTML = data
-            .map(
-              (e) => `
-        <div class="entry-card">
-          <div class="entry-meta">
-            <span class="entry-category">${e.category}</span>
-            <span class="entry-date">${formatDate(e.created_at)}</span>
-          </div>
-          <div class="entry-name">${e.name || "Anonymous"}</div>
-          <div class="entry-contact">
-            ${e.email ? `Email: ${String(e.email).replace(/</g, "&lt;").replace(/>/g, "&gt;")}` : ""}
-            ${e.email && e.phone ? "<br />" : ""}
-            ${e.phone ? `Phone: ${String(e.phone).replace(/</g, "&lt;").replace(/>/g, "&gt;")}` : ""}
-          </div>
-          <div class="entry-msg">${String(e.message).replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
-        </div>
-      `,
-            )
-            .join("");
-        } catch (err) {
-          list.innerHTML = `<div class="empty-state"><p style="color:var(--accent)">Error loading data. Check your Supabase table exists.</p></div>`;
+          const hash = await sha256(pw);
+          const rows = await sbGet("admins", `?email=eq.${encodeURIComponent(email)}&password_hash=eq.${hash}&select=id,name,email,role`);
+          if (!rows.length) { errEl.textContent = "Incorrect email or password."; return; }
+          saveSession(rows[0]);
+          applyAdminUI();
+          showPage("page-admin");
+          loadAdmin();
+        } catch(err) {
+          errEl.textContent = "Login failed. Try again.";
           console.error(err);
         }
       }
 
+      function adminLogout() {
+        clearSession();
+        showPage("page-form");
+      }
+
+      function applyAdminUI() {
+        if (!currentAdmin) return;
+        document.getElementById("admin-welcome-text").textContent = `Signed in as ${currentAdmin.name}`;
+        document.getElementById("manage-welcome-text").textContent = `Signed in as ${currentAdmin.name}`;
+        const manageBtn = document.getElementById("btn-manage-admins");
+        manageBtn.style.display = currentAdmin.role === "super_admin" ? "inline-block" : "none";
+      }
+
+      // ── LOAD SUBMISSIONS ──
+      let activeFilter = "All";
+      let activeSort   = "desc";
+
+      async function loadAdmin(filter, sortOrder) {
+        if (!currentAdmin) { showPage("page-adminlogin"); return; }
+        if (filter !== undefined) activeFilter = filter;
+        if (sortOrder !== undefined) activeSort = sortOrder;
+
+        const list = document.getElementById("admin-list");
+        list.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>';
+
+        try {
+          const allData = await sbGet(TABLE, `?order=created_at.${activeSort}`);
+          const data = activeFilter === "All"
+            ? allData
+            : allData.filter(e => e.category === activeFilter);
+
+          // Load admins for name lookup
+          const admins = await sbGet("admins", "?select=id,name");
+          const adminMap = {};
+          admins.forEach(a => adminMap[a.id] = a.name);
+
+          const cats = ["All", ...new Set(allData.map(e => e.category))];
+          const filtersEl = document.getElementById("admin-filters");
+          filtersEl.innerHTML = cats.map(c =>
+            `<button class="filter-btn ${c === activeFilter ? "active" : ""}" onclick="loadAdmin('${c}')">${c} (${c === "All" ? allData.length : allData.filter(e => e.category === c).length})</button>`
+          ).join("") +
+          `<button class="filter-btn ${activeSort === "desc" ? "active" : ""}" onclick="loadAdmin(undefined,'desc')">Newest first</button>
+           <button class="filter-btn ${activeSort === "asc" ? "active" : ""}" onclick="loadAdmin(undefined,'asc')">Oldest first</button>`;
+
+          document.getElementById("admin-count").textContent = data.length;
+
+          if (!data.length) {
+            list.innerHTML = `<div class="empty-state">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <rect x="8" y="12" width="32" height="28" rx="3" stroke="#8a8070" stroke-width="2"/>
+                <path d="M16 22h16M16 30h10" stroke="#8a8070" stroke-width="2" stroke-linecap="round"/>
+              </svg><p>No submissions yet.</p></div>`;
+            return;
+          }
+
+          const hostedDomain = window.location.origin + window.location.pathname;
+
+          list.innerHTML = data.map(e => {
+            const status = e.status || "open";
+            const assignedName = e.assigned_to ? (adminMap[e.assigned_to] || "Unknown") : null;
+            const reviewLink = `${hostedDomain}?review=${e.id}`;
+            const waMsg = encodeURIComponent(`Hello ${esc(e.name)}, your feedback on "${esc(e.category)}" at Trolleys Superstore has been resolved. Please let us know how we did: ${reviewLink}`);
+            const emailSubject = encodeURIComponent("Your Feedback Has Been Resolved — Trolleys Superstore");
+            const emailBody = encodeURIComponent(`Hello ${e.name || ""},\n\nWe wanted to let you know that your recent feedback regarding "${e.category}" has been resolved.\n\nPlease take a moment to review how we did:\n${reviewLink}\n\nThank you,\nTrolleys Superstore Team`);
+
+            return `
+            <div class="entry-card status-${status}" id="card-${e.id}">
+              <div class="entry-meta">
+                <div class="entry-meta-left">
+                  <span class="entry-category">${esc(e.category)}</span>
+                  <span class="status-badge ${status}">${status.replace("_", " ")}</span>
+                </div>
+                <span class="entry-date">${formatDate(e.created_at)}</span>
+              </div>
+              <div class="entry-name">${esc(e.name || "Anonymous")}</div>
+              <div class="entry-contact">
+                ${e.email ? `Email: ${esc(e.email)}` : ""}
+                ${e.email && e.phone ? "<br>" : ""}
+                ${e.phone ? `Phone: ${esc(e.phone)}` : ""}
+              </div>
+              <div class="entry-msg">${esc(e.message)}</div>
+              ${assignedName ? `<div class="entry-assigned">Assigned to: ${esc(assignedName)}</div>` : ""}
+              ${e.admin_note && status === "resolved" ? `
+                <div class="resolved-note">
+                  <div class="note-label">Resolution Note</div>
+                  ${esc(e.admin_note)}
+                  ${e.resolved_at ? `<div class="resolved-by">Resolved ${formatDate(e.resolved_at)}</div>` : ""}
+                </div>` : ""}
+
+              ${status !== "resolved" ? `
+              <div class="entry-actions">
+                ${status === "open" ? `<button class="btn-card primary" onclick="assignToMe('${e.id}')">Assign to me</button>` : ""}
+                <textarea class="note-area" id="note-${e.id}" placeholder="Write a resolution note…">${esc(e.admin_note || "")}</textarea>
+                <button class="btn-card success" onclick="markResolved('${e.id}')">✓ Mark Resolved</button>
+              </div>` : `
+              <div class="entry-actions">
+                <button class="btn-card" onclick="copyToClipboard('${reviewLink}', this)">📋 Copy Review Link</button>
+                ${e.phone ? `<a class="btn-card whatsapp" href="https://wa.me/${e.phone.replace(/\D/g,'')}?text=${waMsg}" target="_blank">WhatsApp</a>` : ""}
+                ${e.email ? `<a class="btn-card primary" href="mailto:${esc(e.email)}?subject=${emailSubject}&body=${emailBody}">Email</a>` : ""}
+              </div>`}
+            </div>`;
+          }).join("");
+
+        } catch(err) {
+          list.innerHTML = `<div class="empty-state"><p style="color:var(--border)">Error loading data.</p></div>`;
+          console.error(err);
+        }
+      }
+
+      async function assignToMe(id) {
+        if (!currentAdmin) return;
+        try {
+          await sbPatch(TABLE, id, { assigned_to: currentAdmin.id, status: "in_progress" });
+          showToast("Assigned to you.");
+          loadAdmin();
+        } catch(err) { showToast("Failed to assign."); console.error(err); }
+      }
+
+      async function markResolved(id) {
+        if (!currentAdmin) return;
+        const note = document.getElementById(`note-${id}`).value.trim();
+        if (!note) { showToast("Please write a resolution note first."); return; }
+        try {
+          await sbPatch(TABLE, id, {
+            status: "resolved",
+            admin_note: note,
+            assigned_to: currentAdmin.id,
+            resolved_at: new Date().toISOString()
+          });
+          showToast("Marked as resolved.");
+          loadAdmin();
+        } catch(err) { showToast("Failed to update."); console.error(err); }
+      }
+
+      function copyToClipboard(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+          const orig = btn.textContent;
+          btn.textContent = "✓ Copied!";
+          setTimeout(() => btn.textContent = orig, 2000);
+        });
+      }
+
+      // ── MANAGE ADMINS ──
+      async function showManageAdmins() {
+        if (!currentAdmin || currentAdmin.role !== "super_admin") return;
+        showPage("page-manage-admins");
+        applyAdminUI();
+        loadAdminsTable();
+      }
+
+      async function loadAdminsTable() {
+        const container = document.getElementById("admins-table-container");
+        container.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>';
+        try {
+          const admins = await sbGet("admins", "?order=created_at.asc&select=id,name,email,role,created_at");
+          container.innerHTML = `
+            <table class="admin-table">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Created</th><th></th></tr></thead>
+              <tbody>
+                ${admins.map(a => `
+                  <tr>
+                    <td>${esc(a.name)}</td>
+                    <td>${esc(a.email)}</td>
+                    <td><span class="role-badge ${a.role}">${a.role.replace("_", " ")}</span></td>
+                    <td>${formatDate(a.created_at)}</td>
+                    <td>${a.id !== currentAdmin.id && a.role !== "super_admin"
+                      ? `<button class="btn-card" style="color:#c0392b;border-color:#c0392b;font-size:11px;padding:5px 10px;" onclick="removeAdmin('${a.id}','${esc(a.name)}')">Remove</button>`
+                      : ""}</td>
+                  </tr>`).join("")}
+              </tbody>
+            </table>`;
+        } catch(err) {
+          container.innerHTML = `<p style="color:var(--border);font-size:13px;">Failed to load admins.</p>`;
+        }
+      }
+
+      async function createAdmin() {
+        const name  = document.getElementById("new-admin-name").value.trim();
+        const email = document.getElementById("new-admin-email").value.trim().toLowerCase();
+        const pw    = document.getElementById("new-admin-pass").value;
+        const role  = document.getElementById("new-admin-role").value;
+        const errEl = document.getElementById("create-admin-error");
+        errEl.textContent = "";
+
+        if (!name || !email || !pw) { errEl.textContent = "All fields are required."; return; }
+        if (pw.length < 6) { errEl.textContent = "Password must be at least 6 characters."; return; }
+
+        try {
+          const hash = await sha256(pw);
+          await sbPost("admins", { name, email, password_hash: hash, role });
+          showToast(`Admin "${name}" created.`);
+          document.getElementById("new-admin-name").value = "";
+          document.getElementById("new-admin-email").value = "";
+          document.getElementById("new-admin-pass").value = "";
+          document.getElementById("new-admin-role").value = "admin";
+          loadAdminsTable();
+        } catch(err) {
+          errEl.textContent = "Failed to create. Email may already exist.";
+          console.error(err);
+        }
+      }
+
+      async function removeAdmin(id, name) {
+        if (!confirm(`Remove admin "${name}"? They will lose access immediately.`)) return;
+        try {
+          await sbDelete("admins", id);
+          showToast(`${name} removed.`);
+          loadAdminsTable();
+        } catch(err) { showToast("Failed to remove admin."); console.error(err); }
+      }
+
+      // ── REVIEW SYSTEM ──
+      let reviewSuggestionId = null;
+      let reviewRating = 0;
+
+      function setRating(val) {
+        reviewRating = val;
+        document.querySelectorAll(".star").forEach(s => {
+          s.classList.toggle("active", parseInt(s.dataset.v) <= val);
+        });
+      }
+
+      async function initReview(suggestionId) {
+        reviewSuggestionId = suggestionId;
+        try {
+          // Check if already reviewed
+          const existing = await sbGet("reviews", `?suggestion_id=eq.${suggestionId}`);
+          if (existing.length) {
+            showPage("page-review-done");
+            document.querySelector("#page-review-done h2").textContent = "Already Reviewed";
+            document.querySelector("#page-review-done p").textContent = "You've already submitted a review for this issue. Thank you!";
+            return;
+          }
+
+          const rows = await sbGet(TABLE, `?id=eq.${suggestionId}&select=message,admin_note,status,name`);
+          if (!rows.length) { showPage("page-form"); return; }
+          const s = rows[0];
+
+          if (s.status !== "resolved") {
+            showPage("page-form");
+            showToast("This issue hasn't been resolved yet.");
+            return;
+          }
+
+          document.getElementById("review-original-text").textContent = s.message;
+          if (s.admin_note) {
+            document.getElementById("review-resolution-text").textContent = s.admin_note;
+            document.getElementById("review-resolution-box").style.display = "block";
+          }
+          showPage("page-review");
+        } catch(err) {
+          console.error(err);
+          showPage("page-form");
+        }
+      }
+
+      async function submitReview() {
+        if (!reviewRating) { document.getElementById("review-error").textContent = "Please select a rating."; return; }
+        const comment = document.getElementById("review-comment").value.trim();
+        const btn = document.getElementById("review-submit-btn");
+        btn.disabled = true; btn.textContent = "Submitting…";
+        document.getElementById("review-error").textContent = "";
+
+        try {
+          await sbPost("reviews", { suggestion_id: reviewSuggestionId, rating: reviewRating, comment: comment || null });
+          showPage("page-review-done");
+        } catch(err) {
+          document.getElementById("review-error").textContent = "Failed to submit. Please try again.";
+          btn.disabled = false;
+          btn.innerHTML = 'Submit Review <span class="btn-arrow">→</span>';
+          console.error(err);
+        }
+      }
+
+      // ── INIT ──
+      (function init() {
+        // Check for review link
+        const params = new URLSearchParams(window.location.search);
+        const reviewId = params.get("review");
+        if (reviewId) { initReview(reviewId); return; }
+
+        // Restore admin session if exists
+        if (loadSession()) {
+          applyAdminUI();
+        }
+      })();
     </script>
   </body>
 </html>
