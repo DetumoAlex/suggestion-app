@@ -390,6 +390,44 @@
       }
       .resolved-by { font-size: 11px; color: var(--muted); margin-top: 6px; font-style: italic; }
 
+      .inline-review {
+        margin-top: 10px; padding: 12px 14px;
+        background: #fffdf5; border: 1px solid #e8e0cc;
+        border-radius: 6px; animation: fadeUp 0.25s ease both;
+      }
+      .inline-review .review-label {
+        font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+        text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+      }
+      .inline-stars { font-size: 18px; letter-spacing: 2px; margin-bottom: 6px; }
+      .inline-stars .s-filled { color: #f59e0b; }
+      .inline-stars .s-empty { color: #ddd; }
+      .inline-review-comment { font-size: 13px; line-height: 1.6; color: var(--ink); }
+      .no-review-yet { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 8px; }
+
+      /* Reviews tab */
+      #page-reviews { flex-direction: column; animation: fadeUp 0.4s ease both; background: var(--paper); }
+      .reviews-body { padding: 16px 20px 40px; flex: 1; background: var(--paper); }
+      .review-card {
+        background: white; border: 1.5px solid #e0dbd4;
+        border-radius: 8px; padding: 16px 18px; margin-bottom: 12px;
+        animation: fadeUp 0.3s ease both;
+      }
+      .review-card-meta { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+      .review-card-stars { font-size: 18px; letter-spacing: 1px; }
+      .review-card-date { font-size: 11px; color: var(--muted); }
+      .review-card-customer { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+      .review-card-category { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; background: var(--ink); color: var(--paper); padding: 2px 7px; border-radius: 3px; display: inline-block; margin-bottom: 8px; }
+      .review-card-original { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 6px; border-left: 2px solid #ddd; padding-left: 10px; }
+      .review-card-comment { font-size: 14px; line-height: 1.6; color: var(--ink); }
+      .avg-rating-bar {
+        background: white; border-radius: 8px; padding: 16px 20px;
+        margin-bottom: 20px; display: flex; align-items: center; gap: 16px;
+        border: 1.5px solid #e0dbd4;
+      }
+      .avg-score { font-family: "Syne", sans-serif; font-size: 36px; font-weight: 800; color: var(--ink); }
+      .avg-label { font-size: 12px; color: var(--muted); }
+
       .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
       .empty-state svg { margin-bottom: 16px; opacity: 0.3; }
       .empty-state p { font-size: 14px; }
@@ -635,6 +673,7 @@
         </div>
         <div class="admin-header-right">
           <span class="count-badge" id="admin-count">—</span>
+          <button class="btn-header" onclick="showReviewsTab()">⭐ Reviews</button>
           <button class="btn-header" id="btn-manage-admins" onclick="showManageAdmins()" style="display:none">Manage Admins</button>
           <button class="btn-header danger" onclick="adminLogout()">Sign Out</button>
         </div>
@@ -692,6 +731,23 @@
           <div class="error-msg" id="create-admin-error" style="height:auto;text-align:left;color:var(--border);"></div>
           <button class="btn-submit" onclick="createAdmin()" style="margin-top:4px;">Create Admin →</button>
         </div>
+      </div>
+    </div>
+
+    <!-- ── REVIEWS TAB ── -->
+    <div class="page" id="page-reviews">
+      <div class="admin-header">
+        <div class="admin-header-left">
+          <h2>Customer Reviews</h2>
+          <div class="admin-welcome" id="reviews-welcome-text"></div>
+        </div>
+        <div class="admin-header-right">
+          <button class="btn-header" onclick="showPage('page-admin');loadAdmin();">← Back to Submissions</button>
+          <button class="btn-header danger" onclick="adminLogout()">Sign Out</button>
+        </div>
+      </div>
+      <div class="reviews-body" id="reviews-body">
+        <div class="loading-state"><div class="spinner"></div><p>Loading reviews…</p></div>
       </div>
     </div>
 
@@ -964,7 +1020,9 @@
                 <button class="btn-card" onclick="copyToClipboard('${reviewLink}', this)">📋 Copy Review Link</button>
                 ${e.phone ? `<a class="btn-card whatsapp" href="https://wa.me/${e.phone.replace(/\D/g,'')}?text=${waMsg}" target="_blank">WhatsApp</a>` : ""}
                 ${e.email ? `<a class="btn-card primary" href="mailto:${esc(e.email)}?subject=${emailSubject}&body=${emailBody}">Email</a>` : ""}
-              </div>`}
+                <button class="btn-card" onclick="viewInlineReview('${e.id}', this)">⭐ View Review</button>
+              </div>
+              <div id="inline-review-${e.id}"></div>`}
             </div>`;
           }).join("");
 
@@ -1005,6 +1063,94 @@
           btn.textContent = "✓ Copied!";
           setTimeout(() => btn.textContent = orig, 2000);
         });
+      }
+
+      // ── INLINE REVIEW ──
+      async function viewInlineReview(suggestionId, btn) {
+        const container = document.getElementById(`inline-review-${suggestionId}`);
+        if (container.innerHTML) { container.innerHTML = ""; btn.textContent = "⭐ View Review"; return; }
+        btn.textContent = "Loading…";
+        try {
+          const rows = await sbGet("reviews", `?suggestion_id=eq.${suggestionId}`);
+          if (!rows.length) {
+            container.innerHTML = `<div class="no-review-yet">No review submitted yet.</div>`;
+            btn.textContent = "⭐ View Review";
+            return;
+          }
+          const r = rows[0];
+          const filled = "★".repeat(r.rating);
+          const empty  = "★".repeat(5 - r.rating);
+          container.innerHTML = `
+            <div class="inline-review">
+              <div class="review-label">Customer Review</div>
+              <div class="inline-stars">
+                <span class="s-filled">${filled}</span><span class="s-empty">${empty}</span>
+              </div>
+              ${r.comment ? `<div class="inline-review-comment">${esc(r.comment)}</div>` : `<div class="no-review-yet">No comment left.</div>`}
+              <div class="resolved-by">Reviewed ${formatDate(r.created_at)}</div>
+            </div>`;
+          btn.textContent = "✕ Hide Review";
+        } catch(err) {
+          container.innerHTML = `<div class="no-review-yet">Failed to load review.</div>`;
+          btn.textContent = "⭐ View Review";
+        }
+      }
+
+      // ── REVIEWS TAB ──
+      async function showReviewsTab() {
+        if (!currentAdmin) return;
+        document.getElementById("reviews-welcome-text").textContent = `Signed in as ${currentAdmin.name}`;
+        showPage("page-reviews");
+        loadReviewsTab();
+      }
+
+      async function loadReviewsTab() {
+        const body = document.getElementById("reviews-body");
+        body.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>';
+        try {
+          const reviews  = await sbGet("reviews", "?order=created_at.desc");
+          const suggestions = await sbGet(TABLE, "?select=id,name,category,message");
+          const suggMap = {};
+          suggestions.forEach(s => suggMap[s.id] = s);
+
+          if (!reviews.length) {
+            body.innerHTML = `<div class="empty-state"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="12" width="32" height="28" rx="3" stroke="#8a8070" stroke-width="2"/><path d="M16 22h16M16 30h10" stroke="#8a8070" stroke-width="2" stroke-linecap="round"/></svg><p>No reviews yet.</p></div>`;
+            return;
+          }
+
+          const avg = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
+          const filledAvg = Math.round(avg);
+
+          body.innerHTML = `
+            <div class="avg-rating-bar">
+              <div class="avg-score">${avg}</div>
+              <div>
+                <div style="font-size:20px;letter-spacing:2px;color:#f59e0b;">${"★".repeat(filledAvg)}<span style="color:#ddd">${"★".repeat(5-filledAvg)}</span></div>
+                <div class="avg-label">Average from ${reviews.length} review${reviews.length !== 1 ? "s" : ""}</div>
+              </div>
+            </div>
+            ${reviews.map(r => {
+              const s = suggMap[r.suggestion_id] || {};
+              const filled = "★".repeat(r.rating);
+              const empty  = "★".repeat(5 - r.rating);
+              return `
+              <div class="review-card">
+                <div class="review-card-meta">
+                  <div class="review-card-stars">
+                    <span style="color:#f59e0b">${filled}</span><span style="color:#ddd">${empty}</span>
+                  </div>
+                  <div class="review-card-date">${formatDate(r.created_at)}</div>
+                </div>
+                <div class="review-card-customer">${esc(s.name || "Anonymous")}</div>
+                <span class="review-card-category">${esc(s.category || "Unknown")}</span>
+                ${s.message ? `<div class="review-card-original">${esc(s.message)}</div>` : ""}
+                ${r.comment ? `<div class="review-card-comment">${esc(r.comment)}</div>` : `<div style="font-size:12px;color:var(--muted);font-style:italic;">No comment left.</div>`}
+              </div>`;
+            }).join("")}`;
+        } catch(err) {
+          body.innerHTML = `<div class="empty-state"><p style="color:var(--border)">Failed to load reviews.</p></div>`;
+          console.error(err);
+        }
       }
 
       // ── MANAGE ADMINS ──
